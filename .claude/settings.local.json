@@ -41,7 +41,8 @@
       "Bash(logs)",
       "Bash(pip3 list:*)",
       "Bash(git rm:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(sz)"
     ],
     "deny": []
   }

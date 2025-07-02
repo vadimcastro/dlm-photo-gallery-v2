@@ -4,8 +4,8 @@
 
 ### Local Development
 ```bash
+make auth-setup       # 🔑 First-time OAuth setup (streamlined)
 make dev              # Start all services locally
-make setup-local-auth # First-time auth setup
 ```
 
 ### Production Deployment
@@ -33,9 +33,9 @@ make droplet-clean-rebuild    # 🧹 Deep clean rebuild (full cache clear)
 ### Quick Navigation & Git
 ```bash
 # Add project alias to your shell config:
-# alias dlm-photo-gallery-v2="cd ~/Desktop/PROJECTS/dlm-photo-gallery-v2"
+# dlm() { cd /Users/vadimcastro/Desktop/DAN/dlm-photo-gallery-v2; }
 
-dlm-photo-gallery-v2          # Navigate to project
+dlm                       # Navigate to project (vadimOS function)
 gs                        # Git status
 gcp "message"             # Add, commit, push in one command
 glog                      # Show last commit
@@ -43,6 +43,7 @@ glog                      # Show last commit
 
 ### Development Shortcuts
 ```bash
+auth-setup                # 🔑 Complete OAuth setup (alias for make auth-setup)
 dev                       # Start development environment (alias for make dev)
 deploy                    # Deploy current local branch to production (alias)
 quick-deploy              # ⚡ Fast deployment (alias for make droplet-quick-deploy)
@@ -53,8 +54,8 @@ logs                      # View container logs (alias for make droplet-logs)
 
 ### Development
 ```bash
+make auth-setup           # 🔑 Streamlined OAuth setup (recommended)
 make dev                  # Start development environment
-make setup-local-auth     # Configure local authentication
 make logs                 # View container logs
 make clean                # Clean up environment
 ```
@@ -166,7 +167,7 @@ make droplet-force-rebuild  # Force clean rebuild
 - **Token Generator**: `python3 get_oauth_token.py` (now uses `.env.development`)
 - **Environment**: `.env.development` (secure, git-ignored)
 - **Scopes**: `photoslibrary.readonly`
-- **Setup**: Copy `.env.example` → `.env.development`, run token generator
+- **Setup**: Run `make auth-setup` for complete automated OAuth flow
 
 ### API Endpoints
 - **Albums**: `GET /api/v1/photos/albums` - Returns categorized photos
@@ -197,7 +198,38 @@ This project combines original DLM photo gallery functionality with modern vadim
 - ✅ Advanced UI components (ProfileDropdown, AdminMenu)
 - ✅ Mobile-first responsive design
 
-For advanced configuration and shell optimization, see the original vadimcastro.me CLAUDE.md and vadimOS.md documentation.
+## 🖥️ vadimOS Integration
+
+### **Current Compatibility Status:**
+✅ **Working**: `gs`, `gcp`, `glog`, `dev`, `deploy` aliases  
+⚠️ **Needs Update**: `dlm()` function path (see below)  
+🆕 **Missing**: `auth-setup`, `quick-deploy`, `logs` aliases
+
+### **Recommended vadimOS Updates:**
+```bash
+# Update ~/.zshrc with these additions/changes:
+
+# Fix project navigation (UPDATE EXISTING)
+dlm() {
+    cd /Users/vadimcastro/Desktop/DAN/dlm-photo-gallery-v2
+}
+
+# Add new development aliases (ADD THESE)
+alias auth-setup='make auth-setup'
+alias quick-deploy='make droplet-quick-deploy'  
+alias logs='make droplet-logs'
+```
+
+### **Complete New Developer Workflow:**
+```bash
+dlm                       # Navigate to project
+make auth-setup           # One-time OAuth setup
+gs                        # Check git status
+gcp "my changes"          # Commit and push
+make dev                  # Start development
+```
+
+For advanced configuration and shell optimization, see `/Users/vadimcastro/vadimOS.md` documentation.
 
 ## 🔍 Google Photos API Resolution (v2.1)
 
@@ -262,9 +294,51 @@ frontend/.env.local           # Working credentials
 - `get_oauth_token.py`: Updated to use environment variables
 - **Workflow**: Copy `.env.example` → `.env.development` for new setups
 
+## 📱 OAuth Setup Guide
+
+### 🔑 **NEW: Streamlined Auth Setup (`make auth-setup`)**
+
+**✅ SAFE - One Command Does Everything:**
+```bash
+make auth-setup
+```
+
+**What It Does:**
+1. **Creates** `.env.development` from template (if missing)
+2. **Validates** your Google OAuth credentials
+3. **Launches** OAuth flow automatically  
+4. **Updates** `.env.development` with refresh token
+5. **Ready** to use - no manual steps!
+
+### **When to Use:**
+- ✅ **First-time setup** (fresh clone)
+- ✅ **Token refresh** (expired credentials)
+- ✅ **After credential changes** (new OAuth client)
+
+### **Prerequisites:**
+- Google OAuth credentials in `.env.development`:
+  - `GOOGLE_CLIENT_ID=832495994403-...`
+  - `GOOGLE_CLIENT_SECRET=GOCSPX-...`
+- Port 5000 available for OAuth callback
+
+### **Safety Guarantees:**
+- ❌ Never overwrites without permission
+- ✅ Always asks before regenerating tokens
+- ✅ Creates backup files automatically
+- ✅ Validates configuration before proceeding
+
+### **Traditional Setup (Still Available):**
+```bash
+cp .env.example .env.development  # Copy template
+# Edit .env.development with credentials
+python3 get_oauth_token.py        # Generate token manually
+# Copy token back to .env.development
+```
+
 ### Useful Aliases Added:
 ```bash
 # Development workflow
+auth-setup                # 🔑 Complete OAuth setup (NEW)
 down                      # Stop all services  
 clean                     # Clean environment
 help                      # Show all make commands
@@ -272,8 +346,9 @@ kd path=/path/to/delete   # Safe force delete with validation
 quick-deploy              # Alias for droplet-quick-deploy
 deploy-clean              # Alias for droplet-clean-rebuild
 
-# Git shortcuts (via Claude settings)
+# Git shortcuts (via vadimOS)
 gs                        # Git status
 gcp "message"             # Add, commit, push
 glog                      # Show last commit
+dlm                       # Navigate to project directory
 ```

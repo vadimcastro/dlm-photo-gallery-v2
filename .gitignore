@@ -15,6 +15,9 @@ backend/dist/
 .env*
 !.env.example
 
+# Claude Code settings (personal/machine-specific)
+.claude/settings.local.json
+
 # Service account keys
 google-service-account.json
 

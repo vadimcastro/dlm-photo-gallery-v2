@@ -38,7 +38,10 @@
       "Bash(dev)",
       "Bash(deploy)",
       "Bash(quick-deploy)",
-      "Bash(logs)"
+      "Bash(logs)",
+      "Bash(pip3 list:*)",
+      "Bash(git rm:*)",
+      "Bash(chmod:*)"
     ],
     "deny": []
   }

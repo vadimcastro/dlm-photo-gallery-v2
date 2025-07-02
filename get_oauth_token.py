@@ -7,12 +7,33 @@ import socketserver
 from urllib.parse import urlparse, parse_qs
 import json
 import requests
+import os
 
-# Google OAuth2 configuration
-CLIENT_ID = "your_google_client_id"
-CLIENT_SECRET = "your_google_client_secret"
-REDIRECT_URI = "http://localhost:5000/api/auth/callback"
+# Load environment variables from .env.development (manual approach)
+def load_env_file(file_path):
+    """Load environment variables from file"""
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    key, value = line.split('=', 1)
+                    os.environ[key.strip()] = value.strip()
+
+# Load environment variables
+load_env_file('.env.development')
+
+# Google OAuth2 configuration from environment variables
+CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
+CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
+REDIRECT_URI = os.getenv('GOOGLE_REDIRECT_URI', 'http://localhost:5000/api/auth/callback')
 SCOPES = "https://www.googleapis.com/auth/photoslibrary.readonly"
+
+# Validate required environment variables
+if not CLIENT_ID or not CLIENT_SECRET:
+    print("❌ Error: Missing required environment variables")
+    print("Please ensure GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are set in .env.development")
+    exit(1)
 
 class OAuthHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):

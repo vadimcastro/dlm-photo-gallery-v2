@@ -163,9 +163,10 @@ make droplet-force-rebuild  # Force clean rebuild
 - **Status**: ✅ Fully functional with Next.js API routes
 - **OAuth Client**: 832495994403-09dn...apps.googleusercontent.com
 - **Quota**: 500 requests/day (increased from 250)
-- **Token Generator**: `python3 get_oauth_token.py`
-- **Environment**: `frontend/.env.local`
+- **Token Generator**: `python3 get_oauth_token.py` (now uses `.env.development`)
+- **Environment**: `.env.development` (secure, git-ignored)
 - **Scopes**: `photoslibrary.readonly`
+- **Setup**: Copy `.env.example` → `.env.development`, run token generator
 
 ### API Endpoints
 - **Albums**: `GET /api/v1/photos/albums` - Returns categorized photos
@@ -249,16 +250,17 @@ frontend/.env.local           # Working credentials
 
 ## 🔒 Security & Git History
 
-### ✅ **SECURITY RESOLVED** (v2.1.1)
-- **Issue**: OAuth credentials exposed in commit history  
-- **Solution**: Created clean `feature/redesign-clean` branch from safe commit
-- **Status**: All secrets removed from working branch history
-- **Ready**: Can safely push to GitHub without secret detection
+### ✅ **SECURITY RESOLVED** (v2.1.2)
+- **Issue**: OAuth credentials in git history and tracked files
+- **Solution**: Clean git history + proper `.gitignore` configuration
+- **Status**: All secrets removed from git tracking
+- **Ready**: Safe to push to GitHub with proper credential management
 
-### Clean Branch History:
-- `feature/redesign-clean`: ✅ No exposed credentials
-- `master`: ✅ Reset to clean state before credentials
-- `feature/redesign`: ❌ Deleted (contained secrets)
+### Git Security Configuration:
+- `.gitignore`: Ignores all `.env*` files except `.env.example`
+- `.env.development`: Git-ignored, contains working credentials
+- `get_oauth_token.py`: Updated to use environment variables
+- **Workflow**: Copy `.env.example` → `.env.development` for new setups
 
 ### Useful Aliases Added:
 ```bash

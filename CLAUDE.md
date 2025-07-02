@@ -205,6 +205,30 @@ glog                      # Show last commit
 dev                       # Start development environment
 deploy                    # Deploy current branch
 quick-deploy              # Fast deployment with cache
+auth-setup                # Complete OAuth/authentication setup
+deploy-clean              # Deep clean rebuild deployment
+
+# Navigation & Utility Commands
+vpt                       # Navigate to vadim-project-template
+vc                        # Navigate to vadimcastro.me
+dlm                       # Navigate to dlm-photo-gallery-v2
+home                      # Go to home directory
+kd                        # Quick delete (rm -rf)
+docs                      # Open API documentation
+
+# Project Creation & Management
+newtest                   # Create standardized test project
+newrun                    # Create project + auto-start dev
+clean-dirs                # Cleanup testing directories
+
+# Shell & Docker Management
+sz                        # Source zsh config
+vz                        # Edit zsh config
+shortcuts                 # Show all available aliases
+dps                       # Docker container status
+dclean                    # Docker system cleanup
+dlog                      # Docker logs
+dex                       # Docker exec
 
 # Template-Specific Commands
 make help                 # Show all available project commands

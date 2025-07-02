@@ -1,0 +1,145 @@
+# ~/.bashrc: {{PROJECT_NAME}} Droplet Configuration
+# Optimized bash configuration for production environment
+
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+# History configuration - Enhanced for development workflow
+HISTCONTROL=ignoredups:ignorespace
+HISTSIZE=5000
+HISTFILESIZE=10000
+shopt -s histappend
+shopt -s checkwinsize
+
+# Enable color support
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# Colored prompt with proper escape sequences
+if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+    # Green user@host, blue path, white $
+    PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+else
+    # Fallback without colors
+    PS1='\u@\h:\w\$ '
+fi
+
+# Set terminal title
+case "$TERM" in
+xterm*|rxvt*|screen*)
+    PS1="\[\e]0;\u@\h: \w\a\]$PS1"
+    ;;
+esac
+
+# Environment variables
+export DEPLOY_BRANCH_ENV=main
+
+# Project navigation shortcuts
+function {{PROJECT_NAME_CLEAN}}() {
+    cd /root/{{PROJECT_NAME}}
+}
+
+# Git shortcuts
+alias gs='git status'
+alias ga='git add .'
+alias gc='git commit -m'
+alias gp='git push'
+alias gl='git pull'
+alias gb='git branch'
+alias gco='git checkout'
+alias glog='git log --oneline -1'
+
+# System shortcuts
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias ..='cd ..'
+alias home='cd ~'
+alias c='clear'
+
+# Shell config shortcuts
+alias sb='source ~/.bashrc'
+alias vb='vim ~/.bashrc'
+
+# Generate and source bashrc from template
+gsb() {
+    cp scripts/droplet-bashrc ~/.bashrc && sb
+}
+
+# Docker shortcuts
+alias dps='docker ps'
+alias dclean='docker system prune -f'
+alias dlog='docker logs -f'
+alias dex='docker exec -it'
+
+# Development shortcuts
+alias dev='make dev'
+alias prod='make prod'
+alias deploy='make deploy'
+alias status='make droplet-status'
+alias logs='make droplet-logs'
+alias quick-deploy='make droplet-quick-deploy'
+
+# Quick commit and push
+function gcp() {
+    git add . && git commit -m "$1" && git push
+}
+
+# Show all available aliases and functions
+function shortcuts() {
+    echo "📋 Available Shortcuts & Aliases:"
+    echo ""
+    echo "🗂️  Project Navigation:"
+    echo "  {{PROJECT_NAME_CLEAN}} → cd /root/{{PROJECT_NAME}}"
+    echo ""
+    echo "🔧 Git Shortcuts:"
+    echo "  gs → git status"
+    echo "  ga → git add ."
+    echo "  gc → git commit -m"
+    echo "  gp → git push"
+    echo "  gl → git pull"
+    echo "  gb → git branch"
+    echo "  gco → git checkout"
+    echo "  glog → git log --oneline -1"
+    echo "  gcp \"msg\" → git add . && commit && push"
+    echo ""
+    echo "🐳 Docker Shortcuts:"
+    echo "  dps → docker ps"
+    echo "  dclean → docker system prune -f"
+    echo "  dlog → docker logs -f"
+    echo "  dex → docker exec -it"
+    echo ""
+    echo "⚡ Development:"
+    echo "  dev → make dev"
+    echo "  prod → make prod"
+    echo "  deploy → make deploy"
+    echo "  quick-deploy → make droplet-quick-deploy"
+    echo "  status → make droplet-status"
+    echo "  logs → make droplet-logs"
+    echo ""
+    echo "💡 System:"
+    echo "  ll → ls -alF"
+    echo "  la → ls -A"
+    echo "  l → ls -CF"
+    echo "  .. → cd .."
+    echo "  home → cd ~"
+    echo "  c → clear"
+    echo "  sb → source ~/.bashrc"
+    echo "  vb → vim ~/.bashrc"
+    echo "  gsb → generate and source bashrc from template"
+}
+
+# Load bash completion if available
+if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+    . /etc/bash_completion
+fi
+
+# Load additional aliases if file exists
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi

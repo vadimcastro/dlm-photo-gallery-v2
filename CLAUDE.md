@@ -200,40 +200,32 @@ This project combines original DLM photo gallery functionality with modern vadim
 
 ## 🖥️ vadimOS Integration
 
+### **Shell Configuration Reference:**
+📋 **Complete Configuration**: `/Users/vadimcastro/vadimOS.md`  
+🔧 **Live Config**: `/Users/vadimcastro/.zshrc`  
+🎯 **Project Alias**: `dlm` (navigate to this project)
+
 ### **Current Compatibility Status:**
-✅ **Working**: `gs`, `gcp`, `glog`, `dev`, `deploy` aliases  
-⚠️ **Needs Update**: `dlm()` function path (see below)  
-🆕 **Missing**: `auth-setup`, `quick-deploy`, `logs` aliases
+✅ **Universal Commands**: `gs`, `gcp`, `glog`, `dev`, `deploy`, `quick-deploy`, `logs`, `auth-setup`  
+✅ **Project Navigation**: `dlm` → auto-navigate to dlm-photo-gallery-v2  
+✅ **Utility Commands**: `kd`, `deploy-clean`, `docs`, `newtest`, `clean-dirs`
 
-### **Recommended vadimOS Updates:**
+### **Complete Developer Workflow:**
 ```bash
-# Update ~/.zshrc with these additions/changes:
-
-# Fix project navigation (UPDATE EXISTING)
-dlm() {
-    cd /Users/vadimcastro/Desktop/DAN/dlm-photo-gallery-v2
-}
-
-# Add new development aliases (ADD THESE)
-alias auth-setup='make auth-setup'
-alias quick-deploy='make droplet-quick-deploy'  
-alias logs='make droplet-logs'
-```
-
-### **Complete New Developer Workflow:**
-```bash
-dlm                       # Navigate to project
-make auth-setup           # One-time OAuth setup
+dlm                       # Navigate to project (alias auto-navigation)
+auth-setup                # One-time OAuth setup (universal alias)
 gs                        # Check git status
-gcp "my changes"          # Commit and push
-make dev                  # Start development
+gcp "my changes"          # Commit and push (universal function)
+dev                       # Start development (universal alias)
+deploy                    # Deploy to production (universal alias)
+logs                      # View container logs (universal alias)
 ```
 
 ### **Innovation Source for vadimOS**
 DLM Photo Gallery v2 serves as the **primary innovation lab** for vadimOS workflow enhancements:
 
 - **🔑 `auth-setup` command**: Pioneered here, now being standardized across all vadim projects
-- **🛠️ Utility commands**: `kd`, `deploy-clean`, `quick-deploy` originated from DLM development needs
+- **🛠️ Utility commands**: `kd` (rm -rf), `deploy-clean`, `quick-deploy` originated from DLM development needs
 - **📱 Mobile-first aliases**: Responsive workflow patterns developed for photo gallery management
 - **🔄 Branch sync automation**: Advanced git workflows tested in production photo deployments
 
@@ -365,7 +357,7 @@ auth-setup                # 🔑 Complete OAuth setup
 down                      # Stop all services  
 clean                     # Clean environment
 help                      # Show all make commands
-kd path=/path/to/delete   # Safe force delete with validation
+kd /path/to/delete        # Quick delete (rm -rf)
 quick-deploy              # Alias for droplet-quick-deploy
 deploy-clean              # Alias for droplet-clean-rebuild
 

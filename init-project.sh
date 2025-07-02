@@ -259,11 +259,35 @@ EOF
 echo ""
 echo "✅ Project created successfully!"
 echo ""
-echo "🎉 Next Steps:"
-echo "1. cd $PROJECT_PATH"
-echo "2. make dev"
-echo "3. make setup-local-auth"
-echo "4. Visit http://localhost:3000"
+echo "🚀 Starting development environment and configuring authentication..."
+
+# Navigate to project and start services
+cd "$PROJECT_PATH"
+
+# Start services in background
+echo "Starting Docker services..."
+make dev > /dev/null 2>&1 &
+DEV_PID=$!
+
+# Wait a moment for services to initialize
+echo "Waiting for services to initialize..."
+sleep 10
+
+# Setup authentication
+echo "Configuring local authentication..."
+make setup-local-auth
+
+# Let user know everything is ready
+echo ""
+echo "🎉 Setup Complete!"
+echo "📍 Project Path: $PROJECT_PATH"
+echo "🌐 Frontend: http://localhost:3000"
+echo "📚 API Docs: http://localhost:8000/docs"
+echo "📊 Dashboard: http://localhost:3000/dashboard"
+echo ""
+echo "🔑 Login Credentials:"
+echo "   Email: $ADMIN_EMAIL"
+echo "   Password: $DEV_PASSWORD"
 echo ""
 echo "📖 For production deployment:"
 echo "1. Configure SSH access to your production server"

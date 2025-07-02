@@ -360,6 +360,7 @@ help                      # Show all make commands
 kd /path/to/delete        # Quick delete (rm -rf)
 quick-deploy              # Alias for droplet-quick-deploy
 deploy-clean              # Alias for droplet-clean-rebuild
+shortcuts                 # 📋 Enhanced alias reference (organized categories)
 
 # Git shortcuts (via vadimOS)
 gs                        # Git status
@@ -367,6 +368,14 @@ gcp "message"             # Add, commit, push
 glog                      # Show last commit
 dlm                       # Navigate to project directory
 ```
+
+### **Enhanced shortcuts() Function:**
+The `shortcuts` command now provides a comprehensive, organized display of all available aliases:
+- **8 organized categories**: Project Navigation, Git, System, Docker, etc.
+- **Complete coverage**: All universal aliases, functions, and utility commands
+- **Clear descriptions**: Easy-to-understand command explanations
+- **vadimOS.md reference**: Links to complete documentation
+- **No grep parsing**: Reliable static output that always works
 
 ### **Template Improvements:**
 - ✅ **Fixed broken imports**: Removed faulty "projects" module causing errors

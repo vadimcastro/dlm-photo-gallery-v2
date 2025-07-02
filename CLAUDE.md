@@ -94,14 +94,16 @@ make help                      # 📖 Show all available commands
 
 ## 🎯 Current Development Focus
 
-### ✅ Completed Features (v2.0)
-- **Google Photos Integration**: Full OAuth2 API integration with album categorization
-- **Photo Gallery UI**: Masonry layout, category filtering, full-screen modal viewer
-- **Modern Infrastructure**: Next.js 14 + TypeScript, FastAPI backend, PostgreSQL + Redis
-- **Production Deployment**: Docker automation, Makefile commands, DigitalOcean ready
+### ✅ Completed Features (v2.1)
+- **Google Photos Integration**: ✅ **WORKING** - OAuth2 API integration with album categorization
+- **Next.js API Routes**: Direct Google Photos API integration without FastAPI dependency
+- **Authentication Resolution**: Fixed deleted OAuth client, fresh token generation system
+- **Photo Gallery UI**: Masonry layout, category filtering, full-screen modal viewer (ready for redesign)
+- **Modern Infrastructure**: Next.js 14 + TypeScript, optimized Makefile commands
+- **Production Deployment**: Docker automation, DigitalOcean ready
 - **Advanced UI Components**: ProfileDropdown, AdminMenu, mobile-responsive design
 - **Image Optimization**: Proxy server with size parameters, caching, lazy loading
-- **Authentication System**: JWT-based login integrated with gallery access
+- **Development Tools**: OAuth token generator, comprehensive debugging, mock data fallback
 
 ### 🔄 Branch Management
 ```bash
@@ -151,20 +153,28 @@ ssh droplet 'cd dlm-photo-gallery-v2 && docker compose -f docker/docker-compose.
 make droplet-force-rebuild  # Force clean rebuild
 ```
 
-## 📋 Login Credentials
+## 📋 Authentication & Credentials
 
-### Development
+### Development Login
 - **Email**: dan@example.com
 - **Password**: gallery123
 
-### Google Photos API
-- **Setup Guide**: See `GOOGLE_PHOTOS_SETUP.md`
-- **Required**: Google Client ID, Client Secret, Refresh Token
-- **Album IDs**: Configure for Portraits, Landscape, Architecture, Abstract, Wildlife
+### Google Photos API ✅ **WORKING**
+- **Status**: ✅ Fully functional with Next.js API routes
+- **OAuth Client**: 832495994403-09dn...apps.googleusercontent.com
+- **Quota**: 500 requests/day (increased from 250)
+- **Token Generator**: `python3 get_oauth_token.py`
+- **Environment**: `frontend/.env.local`
+- **Scopes**: `photoslibrary.readonly`
+
+### API Endpoints
+- **Albums**: `GET /api/v1/photos/albums` - Returns categorized photos
+- **Images**: `GET /api/v1/photos/image/[photoId]?size=medium` - Proxied images
+- **Debug**: `GET /api/debug` - Environment variable check
 
 ### Production
 - Configure with: `make setup-prod-env`
-- Credentials generated during setup
+- Copy working credentials from `frontend/.env.local`
 
 ## 🛠️ Setup History
 
@@ -187,3 +197,81 @@ This project combines original DLM photo gallery functionality with modern vadim
 - ✅ Mobile-first responsive design
 
 For advanced configuration and shell optimization, see the original vadimcastro.me CLAUDE.md and vadimOS.md documentation.
+
+## 🔍 Google Photos API Resolution (v2.1)
+
+### Problem Solved
+- **Root Cause**: Original OAuth client was deleted from Google Cloud Console
+- **Error**: `"deleted_client"` - prevented both dlm1 and dlm2 from working
+- **Solution**: Created new OAuth client with proper Photos Library API access
+
+### Implementation Details
+- **Architecture**: Next.js API routes instead of FastAPI proxy
+- **Authentication**: OAuth2 with refresh token caching
+- **Token Management**: Automatic refresh with 55-minute buffer
+- **Error Handling**: Comprehensive logging and mock data fallback
+- **Quota Management**: 500 requests/day, graceful degradation
+
+### Files Created/Modified
+```
+frontend/src/app/api/v1/photos/
+├── albums/route.ts           # Main photos API
+└── image/[photoId]/route.ts  # Image proxy API
+frontend/src/app/api/
+├── auth/url/route.ts         # OAuth initiation
+├── auth/callback/route.ts    # OAuth completion
+└── debug/route.ts            # Environment debugging
+get_oauth_token.py            # Token generation script
+frontend/.env.local           # Working credentials
+```
+
+### Next Steps
+- **Immediate**: UI/UX redesign to match modern dlm1 styling
+- **Short-term**: Production deployment with working credentials
+- **Long-term**: Album management, performance optimization
+
+## 🎨 UI Development Roadmap
+
+### Current State
+- ✅ **Functionality**: All features working (auth, API, filtering, modal)
+- ✅ **Data**: Real Google Photos loading (quota permitting)
+- ⚠️  **Styling**: Basic Tailwind CSS, needs modern design
+
+### Redesign Goals
+- **Match dlm1**: Replicate modern, beautiful UI from working version
+- **Enhanced**: Improved mobile responsiveness and interactions
+- **Performance**: Optimized image loading and caching
+
+### Development Branch  
+- **Branch**: `feature/redesign-clean` ✅ **CLEAN HISTORY**
+- **Focus**: UI/UX improvements without breaking working Google integration
+- **Approach**: Component-by-component enhancement
+
+## 🔒 Security & Git History
+
+### ✅ **SECURITY RESOLVED** (v2.1.1)
+- **Issue**: OAuth credentials exposed in commit history  
+- **Solution**: Created clean `feature/redesign-clean` branch from safe commit
+- **Status**: All secrets removed from working branch history
+- **Ready**: Can safely push to GitHub without secret detection
+
+### Clean Branch History:
+- `feature/redesign-clean`: ✅ No exposed credentials
+- `master`: ✅ Reset to clean state before credentials
+- `feature/redesign`: ❌ Deleted (contained secrets)
+
+### Useful Aliases Added:
+```bash
+# Development workflow
+down                      # Stop all services  
+clean                     # Clean environment
+help                      # Show all make commands
+kd path=/path/to/delete   # Safe force delete with validation
+quick-deploy              # Alias for droplet-quick-deploy
+deploy-clean              # Alias for droplet-clean-rebuild
+
+# Git shortcuts (via Claude settings)
+gs                        # Git status
+gcp "message"             # Add, commit, push
+glog                      # Show last commit
+```

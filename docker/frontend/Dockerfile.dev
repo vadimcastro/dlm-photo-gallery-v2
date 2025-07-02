@@ -1,0 +1,10 @@
+# docker/frontend/Dockerfile.dev
+FROM node:18-alpine
+WORKDIR /app
+
+# Set environment variables
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Start the development server
+CMD ["sh", "-c", "npm ci && npm run dev"]

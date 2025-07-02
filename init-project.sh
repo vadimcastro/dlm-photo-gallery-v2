@@ -44,6 +44,12 @@ read -p "Admin display name: " ADMIN_NAME
 ADMIN_INITIALS=$(echo "$ADMIN_NAME" | grep -o '\b[A-Z]' | tr -d '\n')
 
 echo ""
+echo "🔗 Social Links (optional):"
+read -p "GitHub URL (e.g., https://github.com/username): " GITHUB_URL
+read -p "LinkedIn URL (e.g., https://linkedin.com/in/username): " LINKEDIN_URL
+read -p "Website URL (e.g., https://yoursite.com): " WEBSITE_URL
+
+echo ""
 echo "🌐 Infrastructure Configuration:"
 read -p "Production server IP (e.g., 206.81.2.168): " PRODUCTION_IP
 read -p "Domain name (optional, for HTTPS): " DOMAIN_NAME
@@ -86,6 +92,9 @@ echo "Admin Email: $ADMIN_EMAIL"
 echo "Admin Username: $ADMIN_USERNAME"
 echo "Admin Name: $ADMIN_NAME"
 echo "Admin Initials: $ADMIN_INITIALS"
+echo "GitHub: ${GITHUB_URL:-\"Not provided\"}"
+echo "LinkedIn: ${LINKEDIN_URL:-\"Not provided\"}"
+echo "Website: ${WEBSITE_URL:-\"Not provided\"}"
 echo "Production IP: $PRODUCTION_IP"
 echo "Domain: ${DOMAIN_NAME:-"Not configured"}"
 echo "SSH Alias: $DROPLET_ALIAS"
@@ -126,6 +135,9 @@ replace_vars() {
             -e "s|{{DEV_PASSWORD}}|$DEV_PASSWORD|g" \
             -e "s|{{SECRET_KEY}}|$SECRET_KEY|g" \
             -e "s|{{PROJECT_NAME_CLEAN}}|$PROJECT_NAME_CLEAN|g" \
+            -e "s|{{GITHUB_URL}}|$GITHUB_URL|g" \
+            -e "s|{{LINKEDIN_URL}}|$LINKEDIN_URL|g" \
+            -e "s|{{WEBSITE_URL}}|$WEBSITE_URL|g" \
             "$file" && rm "$file.tmp"
     fi
 }
@@ -134,7 +146,7 @@ echo "🔧 Configuring project files..."
 
 # Export the function and variables before using them
 export -f replace_vars
-export PROJECT_NAME ADMIN_EMAIL ADMIN_USERNAME ADMIN_NAME ADMIN_INITIALS PRODUCTION_IP DOMAIN_NAME DROPLET_ALIAS DEV_PASSWORD SECRET_KEY PROJECT_DISPLAY_NAME PROJECT_DESCRIPTION PROJECT_NAME_CLEAN
+export PROJECT_NAME ADMIN_EMAIL ADMIN_USERNAME ADMIN_NAME ADMIN_INITIALS PRODUCTION_IP DOMAIN_NAME DROPLET_ALIAS DEV_PASSWORD SECRET_KEY PROJECT_DISPLAY_NAME PROJECT_DESCRIPTION PROJECT_NAME_CLEAN GITHUB_URL LINKEDIN_URL WEBSITE_URL
 
 # Replace variables in configuration files
 find "$PROJECT_PATH" -type f \( -name "*.yml" -o -name "*.yaml" -o -name "*.json" -o -name "*.sh" -o -name "*.md" -o -name "*.conf" -o -name "Makefile" -o -name "Dockerfile*" -o -name ".env*" -o -name "*.tsx" -o -name "*.ts" -o -name "*.py" \) -print0 | while IFS= read -r -d '' file; do

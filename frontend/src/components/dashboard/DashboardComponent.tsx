@@ -258,7 +258,7 @@ const DashboardComponent = () => {
         {/* Mobile view: show limited metrics with expand/collapse */}
         <div className="lg:hidden">
           <div className="grid grid-cols-1 gap-2">
-            {(showAllMetrics ? allStats : allStats.slice(0, 3)).map((stat, index) => (
+            {(showAllMetrics ? allStats : allStats.slice(0, 5)).map((stat, index) => (
               <MetricCard
                 key={index}
                 title={stat.title}
@@ -271,13 +271,13 @@ const DashboardComponent = () => {
             ))}
           </div>
           
-          {allStats.length > 3 && (
+          {allStats.length > 5 && (
             <div className="flex justify-center mt-3">
               <button
                 onClick={() => setShowAllMetrics(!showAllMetrics)}
                 className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
               >
-                <span>{showAllMetrics ? 'Show Less' : `Show ${allStats.length - 3} More`}</span>
+                <span>{showAllMetrics ? 'Show Less' : `Show ${allStats.length - 5} More`}</span>
                 {showAllMetrics ? (
                   <ChevronUp className="w-3 h-3" />
                 ) : (

@@ -150,18 +150,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const userFetched = await fetchUser(storedToken);
           
           if (!userFetched && pathname.startsWith('/dashboard')) {
-            console.log('User fetch failed, redirecting from protected route');
-            router.replace('/');
+            console.log('User fetch failed for dashboard route');
+            // Let dashboard page handle authentication UI
           }
         } else if (pathname.startsWith('/dashboard')) {
-          console.log('No token found, redirecting from protected route');
-          router.replace('/');
+          console.log('No token found for dashboard route');
+          // Let dashboard page handle authentication UI
         }
       } catch (error) {
         console.error('Auth initialization error:', error);
-        if (pathname.startsWith('/dashboard')) {
-          router.replace('/');
-        }
+        // Let dashboard page handle authentication UI
+        // No automatic redirects
       } finally {
         setIsLoading(false);
       }

@@ -12,7 +12,7 @@ interface DashboardHeaderProps {
   }: DashboardHeaderProps) => (
     <div className="flex justify-between items-center">
       <h1 className="text-3xl font-semibold text-gray-900 hidden lg:block">
-        Welcome to Your Dashboard
+        Welcome to {{PROJECT_DISPLAY_NAME}} Dashboard
       </h1>
       <div className="flex items-center gap-4 hidden lg:flex">
         <span className="text-sm text-gray-500">

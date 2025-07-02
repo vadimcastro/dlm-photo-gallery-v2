@@ -1,8 +1,13 @@
-.PHONY: dev prod down clean migrate logs format help
+.PHONY: dev dev-docker dev-npm prod down clean migrate logs format help kd quick-deploy deploy-clean
 # Development commands
 dev:
-	@echo "Starting development environment..."
+	@echo "🚀 Starting Next.js development (with Google Photos API)..."
+	cd frontend && npm run dev
+
+dev-docker:
+	@echo "🐳 Starting full Docker development environment..."
 	cd docker && docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+
 dev-debug:
 	@echo "Starting development environment with debug logs..."
 	cd docker && docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build 2>&1 | tee debug.log
@@ -179,12 +184,17 @@ migrate-create:
 	docker compose exec api alembic revision --autogenerate -m "$(name)"
 # Cleanup commands
 down:
-	@echo "Stopping containers..."
-	docker compose -f docker/docker-compose.prod.yml down
-clean:
-	@echo "Cleaning up development environment..."
-	docker system prune -f
-	rm -rf frontend/.next frontend/node_modules
+	@echo "🛑 Stopping all services..."
+	@-pkill -f "next dev" 2>/dev/null || true
+	@-docker compose -f docker/docker-compose.yml -f docker/docker-compose.dev.yml down 2>/dev/null || true
+	@-docker compose -f docker/docker-compose.prod.yml down 2>/dev/null || true
+	@echo "✅ All services stopped"
+
+clean: down
+	@echo "🧹 Cleaning up development environment..."
+	@-docker system prune -f 2>/dev/null || true
+	@-rm -rf frontend/.next frontend/node_modules 2>/dev/null || true
+	@echo "✅ Environment cleaned"
 clean-all: clean
 	@echo "Removing volumes and rebuilding..."
 	docker compose -f docker/docker-compose.prod.yml down -v
@@ -196,13 +206,48 @@ format:
 	@echo "Formatting code..."
 	cd frontend && npm run format
 	cd backend && black .
+
+# Frontend commands
+install:
+	@echo "📦 Installing frontend dependencies..."
+	cd frontend && npm install
+
+build:
+	@echo "🔨 Building frontend..."
+	cd frontend && npm run build
+
+test-api:
+	@echo "🧪 Testing Google Photos API..."
+	curl -s http://localhost:3000/api/v1/photos/albums | head -200
+
+# Useful aliases
+kd:
+	@echo "💥 Force delete: $(path)"
+	@if [ -z "$(path)" ]; then \
+		echo "❌ Error: Path not provided. Use 'make kd path=/your/path'"; \
+		exit 1; \
+	fi
+	@if [ "$(path)" = "/" ] || [ "$(path)" = "~" ] || [ "$(path)" = "." ]; then \
+		echo "❌ Error: Dangerous path provided. Cannot delete $(path)"; \
+		exit 1; \
+	fi
+	rm -rf $(path)
+	@echo "✅ Deleted: $(path)"
+
+quick-deploy: droplet-quick-deploy
+
+deploy-clean: droplet-clean-rebuild
 # Help command
 help:
 	@echo "🚀 dlm-photo-gallery-v2 Development Commands"
 	@echo ""
 	@echo "📱 Development:"
-	@echo "  make dev                    - Start development environment"
+	@echo "  make dev                    - 🚀 Start Next.js dev (Google Photos API)"
+	@echo "  make dev-docker             - 🐳 Start full Docker environment"
 	@echo "  make dev-debug              - Start with debug logging"
+	@echo "  make install                - 📦 Install frontend dependencies"
+	@echo "  make build                  - 🔨 Build frontend"
+	@echo "  make test-api               - 🧪 Test Google Photos API"
 	@echo "  make format                 - Format code (Prettier + Black)"
 	@echo "  make setup-local-auth       - Configure local authentication"
 	@echo "  make logs                   - Show container logs"

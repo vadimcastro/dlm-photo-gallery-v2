@@ -1,18 +1,26 @@
 # Dependencies
 node_modules/
+**/node_modules/
 __pycache__/
 *.py[cod]
 *$py.class
 
 # Production builds
+.next/
 frontend/.next/
 frontend/out/
 backend/dist/
 
-# Environment files
+# Environment files (protect secrets)
+.env
 .env.local
+.env.development
+.env.production
 .env.production.local
 .env*.local
+
+# Service account keys
+google-service-account.json
 
 # IDE
 .vscode/

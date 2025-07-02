@@ -1,7 +1,7 @@
 // src/app/resume/page.tsx
 "use client";
 import Image from 'next/image';
-import { Mail, Github, Linkedin, Phone } from 'lucide-react';
+import { Mail, Github, Linkedin, Phone, User } from 'lucide-react';
 
 interface Experience {
   company: string;
@@ -80,13 +80,8 @@ export default function ResumePage() {
       <section className="bg-white rounded-lg shadow-sm p-3 md:p-4 hover:shadow-md transition-all duration-200">
         <div className="text-center space-y-3">
           <div className="hidden md:flex justify-center">
-            <div className="relative w-20 h-20 rounded-full overflow-hidden">
-              <Image
-                src="/images/profile.jpg"
-                alt="Vadim Castro"
-                fill
-                className="object-cover"
-              />
+            <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center">
+              <User className="w-10 h-10 text-gray-600" />
             </div>
           </div>
           <div>

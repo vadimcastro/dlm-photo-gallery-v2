@@ -4,7 +4,7 @@
 import { Fragment, useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useAuth } from '../../lib/auth/AuthContext';
-import Image from 'next/image';
+import { User } from 'lucide-react';
 import Link from 'next/link';
 
 interface AdminInfo {
@@ -100,16 +100,8 @@ export default function AdminMenu() {
           className="relative flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           <span className="sr-only">Open admin menu</span>
-          <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full overflow-hidden ring-2 ring-blue-500">
-            <Image
-              src="/images/profile.jpg"
-              alt={adminInfo.name}
-              width={32}
-              height={32}
-              className="h-full w-full object-cover"
-              priority
-              unoptimized
-            />
+          <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-blue-500 flex items-center justify-center ring-2 ring-blue-500">
+            <User className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
           </div>
         </button>
       </div>

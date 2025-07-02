@@ -31,3 +31,12 @@ body {
     text-wrap: balance;
   }
 }
+
+@layer components {
+  .login-input {
+    background-color: #f3f4f6 !important;
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827 !important;
+    -webkit-box-shadow: 0 0 0 1000px #f3f4f6 inset !important;
+  }
+}

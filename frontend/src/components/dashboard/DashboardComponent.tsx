@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { Activity, Users, FileText, Cpu, HardDrive, Wifi, Server, Zap, ChevronDown, ChevronUp, GitBranch } from 'lucide-react';
+import { Activity, Users, Cpu, HardDrive, Wifi, Server, Zap, ChevronDown, ChevronUp, GitBranch } from 'lucide-react';
 import { useProtectedApi } from '../../lib/api/protected';
 import { MetricCard } from './MetricCard';
 import { DiskMetricCard } from './DiskMetricCard';
@@ -10,12 +10,6 @@ import { DashboardHeader } from './DashboardHeader';
 interface DashboardMetrics {
   visitors: {
     total: number;
-    percentageChange: number;
-    lastMonthTotal: number;
-  };
-  projects: {
-    total: number;
-    newThisMonth: number;
     percentageChange: number;
     lastMonthTotal: number;
   };
@@ -92,9 +86,8 @@ const DashboardComponent = () => {
       setIsRefreshing(true);
       setError(null);
 
-      const [visitorsData, projectsData, sessionsData, systemData, networkData, healthData, deploymentData] = await Promise.all([
+      const [visitorsData, sessionsData, systemData, networkData, healthData, deploymentData] = await Promise.all([
         api.get<DashboardMetrics['visitors']>('/api/v1/metrics/visitors'),
-        api.get<DashboardMetrics['projects']>('/api/v1/metrics/projects'),
         api.get<DashboardMetrics['sessions']>('/api/v1/metrics/sessions'),
         api.get<DashboardMetrics['system']>('/api/v1/metrics/system'),
         api.get<DashboardMetrics['network']>('/api/v1/metrics/network'),
@@ -104,7 +97,6 @@ const DashboardComponent = () => {
 
       setMetrics({
         visitors: visitorsData,
-        projects: projectsData,
         sessions: sessionsData,
         system: systemData,
         network: networkData,
@@ -225,14 +217,6 @@ const DashboardComponent = () => {
       icon: Users,
       description: "vs. last month",
       trend: metrics.visitors.percentageChange >= 0 ? "up" as const : "down" as const
-    },
-    {
-      title: "Projects",
-      value: formatNumber(metrics.projects.total),
-      change: formatPercentage(metrics.projects.percentageChange),
-      icon: FileText,
-      description: "vs. last month",
-      trend: metrics.projects.percentageChange >= 0 ? "up" as const : "down" as const
     },
     {
       title: "Sessions",

@@ -3,7 +3,7 @@
 
 import React, { useRef, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image'
+import { User } from 'lucide-react';
 import { useAuth } from '../../lib/auth/AuthContext';
 import ProfileDropdown from './ProfileDropdown';
 import AdminMenu from './AdminMenu';
@@ -27,14 +27,11 @@ export default function Navbar() {
             </Link>
           </div>
           <div className="flex items-center">
-            <Link href="/projects" className="hover:text-gray-600 transition-colors duration-200 px-2 sm:px-4 md:px-6 text-sm sm:text-base">
-              Projects
-            </Link>
             <Link href="/dashboard" className="hover:text-gray-600 transition-colors duration-200 px-2 sm:px-4 md:px-6 text-sm sm:text-base">
               Dashboard
             </Link>
             <a
-              href="/api/v1/docs"
+              href="http://localhost:8000/docs"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-gray-600 transition-colors duration-200 px-2 sm:px-4 md:px-6 text-sm sm:text-base"
@@ -50,13 +47,8 @@ export default function Navbar() {
                   onClick={toggleDropdown}
                   className="flex items-center hover:opacity-80 transition-opacity duration-200 pl-2 sm:pl-4 md:pl-6"
                 >
-                  <div className="relative w-8 h-8 rounded-full overflow-hidden">
-                    <Image
-                      src="/images/profile.jpg"
-                      alt="Profile"
-                      fill
-                      className="object-cover"
-                    />
+                  <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
+                    <User className="w-5 h-5 text-gray-600" />
                   </div>
                 </button>
                 <ProfileDropdown

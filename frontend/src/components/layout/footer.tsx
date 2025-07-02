@@ -17,7 +17,7 @@ export default function Footer() {
           
           <div className="mt-4 md:mt-0 flex space-x-6">
             <a
-              href="/api/v1/docs"
+              href="http://localhost:8000/docs"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-600 hover:text-gray-900 text-sm"

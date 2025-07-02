@@ -2,6 +2,15 @@
 
 This template includes advanced UI components copied from vadimcastro.me. Some components require additional dependencies:
 
+## Template Focus
+
+This template provides a minimal but professional foundation with:
+- **Dashboard** - Comprehensive metrics and system monitoring
+- **API Documentation** - FastAPI auto-generated docs
+- **Sign In/Authentication** - Secure user authentication
+
+Complex "projects" functionality has been removed to keep the template clean and focused.
+
 ## Required Additional Dependencies
 
 For the toast system components (`toast.tsx`, `toaster.tsx`, `use-toast.ts`):

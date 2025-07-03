@@ -173,11 +173,39 @@ This project was created from the vadim-project-template, which is based on the 
 
 ## 🖥️ vadimOS Integration
 
-### **Template Compatibility Status:**
-✅ **Universal Commands**: All standard vadimOS workflow patterns supported  
-✅ **Template Variables**: Project placeholders work with context-aware aliases  
-⚠️ **Project Creation**: Enhanced via `newtest` command for rapid template deployment  
-✅ **Cross-Platform**: Works on both local (macOS/zsh) and production (Ubuntu/bash) environments
+  ## 🎯 vadimOS Development Values
+
+  **Core Principles:**
+  - **Efficiency First**: Every command should save time and reduce cognitive load
+  - **Universal Consistency**: Same commands work across all projects
+  - **Context Awareness**: Tools should understand the project environment
+  - **Fail Fast**: Clear error messages and quick recovery paths
+  - **Documentation as Code**: Keep docs in sync with reality
+
+  **Workflow Philosophy:**
+  - Minimize context switching between tools and projects
+  - Automate repetitive tasks (navigation, setup, deployment)
+  - Make complex operations simple and discoverable
+  - Ensure every project follows the same patterns
+  - Optimize for developer happiness and productivity
+
+  ## 🔧 Core vadimOS Commands
+  **Project Navigation:** `vpt` → auto-navigate here
+  **Development:** `gs`, `gcp "msg"`, `glog`, `dev`, `deploy`
+  **Project Creation:** `newtest` → standardized test projects, `newrun` → interactive creation
+  **Utilities:** `clean-dirs`, `kd`, `shortcuts`
+  **Template Workflow:** Universal commands work in all generated projects
+
+  📖 **Complete Reference:** `/Users/vadimcastro/vadimOS.md`
+  🔧 **Live Config:** `/Users/vadimcastro/.zshrc`
+  ⚙️ **Claude Config:** `.claude/settings.local.json` (47 permissions)
+
+  ### **Template Compatibility Status:**
+  ✅ **Universal Commands**: All standard vadimOS workflow patterns supported
+  ✅ **Context Awareness**: vadimOS.md + .zshrc read access enabled
+  ✅ **Zero Approval Prompts**: 47+ commands pre-approved
+  ✅ **Template Variables**: Project placeholders work with context-aware aliases
+
 
 ### **Enhanced Project Creation with `newtest`:**
 ```bash

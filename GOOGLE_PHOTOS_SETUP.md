@@ -85,7 +85,7 @@ If you have the original DLM v1 working:
 
 ```bash
 # Copy credentials from original DLM
-cp /Users/vadimcastro/Desktop/DAN/dlm-photo-gallery/.env /Users/vadimcastro/Desktop/DAN/dlm-photo-gallery-v2/.env.google
+cp /Users/vadimcastro/Desktop/PROJECTS/dlm-photo-gallery/.env /Users/vadimcastro/Desktop/PROJECTS/dlm-photo-gallery-v2/.env.google
 
 # Then manually copy the Google-related values to .env.development
 ```
@@ -94,7 +94,7 @@ cp /Users/vadimcastro/Desktop/DAN/dlm-photo-gallery/.env /Users/vadimcastro/Desk
 
 ### 5.1 Start the Application
 ```bash
-cd /Users/vadimcastro/Desktop/DAN/dlm-photo-gallery-v2
+cd /Users/vadimcastro/Desktop/PROJECTS/dlm-photo-gallery-v2
 make dev
 ```
 

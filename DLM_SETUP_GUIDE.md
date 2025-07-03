@@ -20,10 +20,10 @@
 ### 1. Navigate to Project
 ```bash
 # Using shell navigation
-cd ~/Desktop/DAN/dlm-photo-gallery-v2
+cd ~/Desktop/PROJECTS/dlm-photo-gallery-v2
 
 # Or create an alias for quick access
-echo 'dlmv2() { cd ~/Desktop/DAN/dlm-photo-gallery-v2; }' >> ~/.zshrc
+echo 'dlmv2() { cd ~/Desktop/PROJECTS/dlm-photo-gallery-v2; }' >> ~/.zshrc
 source ~/.zshrc
 dlmv2                     # Now you can use this shortcut
 ```
@@ -40,7 +40,7 @@ make dev
 ### 3. Setup Authentication
 ```bash
 # In a new terminal window/tab (keep make dev running)
-cd ~/Desktop/DAN/dlm-photo-gallery-v2
+cd ~/Desktop/PROJECTS/dlm-photo-gallery-v2
 
 # Configure authentication for Dan
 make setup-local-auth

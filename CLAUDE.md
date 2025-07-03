@@ -33,7 +33,7 @@ make droplet-clean-rebuild    # 🧹 Deep clean rebuild (full cache clear)
 ### Quick Navigation & Git
 ```bash
 # Add project alias to your shell config:
-# dlm() { cd /Users/vadimcastro/Desktop/DAN/dlm-photo-gallery-v2; }
+# dlm() { cd /Users/vadimcastro/Desktop/PROJECTS/dlm-photo-gallery-v2; }
 
 dlm                       # Navigate to project (vadimOS function)
 gs                        # Git status
@@ -225,4 +225,5 @@ This project combines original DLM photo gallery functionality with modern vadim
 
 📖 **Complete Reference:** `/Users/vadimcastro/vadimOS.md`  
 🔧 **Live Config:** `/Users/vadimcastro/.zshrc`  
-⚙️ **Claude Config:** `.claude/settings.local.json` (47 permissions)
+🏗️ **Infrastructure:** `/Users/vadimcastro/Desktop/PROJECTS/vadimOS/`  
+⚙️ **Claude Config:** `.claude/settings.local.json` (47+ permissions)

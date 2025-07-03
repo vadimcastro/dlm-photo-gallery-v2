@@ -173,102 +173,30 @@ This project was created from the vadim-project-template, which is based on the 
 
 ## 🖥️ vadimOS Integration
 
-  ## 🎯 vadimOS Development Values
+## 🎯 vadimOS Development Values
 
-  **Core Principles:**
-  - **Efficiency First**: Every command should save time and reduce cognitive load
-  - **Universal Consistency**: Same commands work across all projects
-  - **Context Awareness**: Tools should understand the project environment
-  - **Fail Fast**: Clear error messages and quick recovery paths
-  - **Documentation as Code**: Keep docs in sync with reality
+**Core Principles:**
+- **Efficiency First**: Every command should save time and reduce cognitive load
+- **Universal Consistency**: Same commands work across all projects
+- **Context Awareness**: Tools should understand the project environment
+- **Fail Fast**: Clear error messages and quick recovery paths
+- **Documentation as Code**: Keep docs in sync with reality
 
-  **Workflow Philosophy:**
-  - Minimize context switching between tools and projects
-  - Automate repetitive tasks (navigation, setup, deployment)
-  - Make complex operations simple and discoverable
-  - Ensure every project follows the same patterns
-  - Optimize for developer happiness and productivity
+**Workflow Philosophy:**
+- Minimize context switching between tools and projects
+- Automate repetitive tasks (navigation, setup, deployment)
+- Make complex operations simple and discoverable
+- Ensure every project follows the same patterns
+- Optimize for developer happiness and productivity
 
-  ## 🔧 Core vadimOS Commands
-  **Project Navigation:** `vpt` → auto-navigate here
-  **Development:** `gs`, `gcp "msg"`, `glog`, `dev`, `deploy`
-  **Project Creation:** `newtest` → standardized test projects, `newrun` → interactive creation
-  **Utilities:** `clean-dirs`, `kd`, `shortcuts`
-  **Template Workflow:** Universal commands work in all generated projects
+## 🔧 Core vadimOS Commands
+**Project Navigation:** `vpt` → auto-navigate here  
+**Development:** `gs`, `gcp "msg"`, `glog`, `dev`, `deploy`  
+**Project Creation:** `newtest` → standardized test projects, `newrun` → interactive creation  
+**Utilities:** `clean-dirs`, `kd`, `shortcuts`  
+**Template Workflow:** Universal commands work in all generated projects
 
-  📖 **Complete Reference:** `/Users/vadimcastro/vadimOS.md`
-  🔧 **Live Config:** `/Users/vadimcastro/.zshrc`
-  ⚙️ **Claude Config:** `.claude/settings.local.json` (47 permissions)
-
-  ### **Template Compatibility Status:**
-  ✅ **Universal Commands**: All standard vadimOS workflow patterns supported
-  ✅ **Context Awareness**: vadimOS.md + .zshrc read access enabled
-  ✅ **Zero Approval Prompts**: 47+ commands pre-approved
-  ✅ **Template Variables**: Project placeholders work with context-aware aliases
-
-
-### **Enhanced Project Creation with `newtest`:**
-```bash
-# Traditional template usage
-cp -r vadim-project-template my-new-project
-cd my-new-project
-# Manual find/replace of {{PROJECT_NAME}} variables...
-
-# vadimOS Enhanced Usage
-newtest my-new-project    # Auto-creates project with smart variable replacement
-                         # Automatically sets up project navigation alias
-                         # Initializes git repository with clean history
-                         # Configures production environment variables
-```
-
-### **Universal Workflow Commands (Template Ready):**
-```bash
-# Project Navigation (auto-generated)
-{{PROJECT_NAME}}          # Navigate to project (alias auto-created by newtest)
-
-# Standard vadimOS Workflow  
-gs                        # Git status
-gcp "message"             # Add, commit, push in one command
-glog                      # Show last commit
-dev                       # Start development environment
-deploy                    # Deploy current branch
-quick-deploy              # Fast deployment with cache
-auth-setup                # Complete OAuth/authentication setup
-deploy-clean              # Deep clean rebuild deployment
-
-# Navigation & Utility Commands
-vpt                       # Navigate to vadim-project-template
-vc                        # Navigate to vadimcastro.me
-dlm                       # Navigate to dlm-photo-gallery-v2
-home                      # Go to home directory
-kd                        # Quick delete (rm -rf)
-docs                      # Open API documentation
-
-# Project Creation & Management
-newtest                   # Create standardized test project
-newrun                    # Create project + auto-start dev
-clean-dirs                # Cleanup testing directories
-
-# Shell & Docker Management
-sz                        # Source zsh config
-vz                        # Edit zsh config
-shortcuts                 # Show all available aliases
-dps                       # Docker container status
-dclean                    # Docker system cleanup
-dlog                      # Docker logs
-dex                       # Docker exec
-
-# Template-Specific Commands
-make help                 # Show all available project commands
-make setup-local-auth     # Configure authentication
-make clean-branches       # Clean git branches
-```
-
-### **Template Enhancement Notes:**
-- **Variable Replacement**: `newtest` automatically handles all `{{PROJECT_NAME}}`, `{{ADMIN_EMAIL}}`, etc.
-- **Shell Integration**: Auto-adds project navigation function to vadimOS configuration
-- **Git Initialization**: Creates clean repository with proper .gitignore patterns
-- **Environment Setup**: Configures both development and production environment templates
-
-### **Complete Workflow Documentation:**
-For comprehensive terminal workflow documentation, template creation patterns, and the complete `newtest` command reference, see `/Users/vadimcastro/vadimOS.md`.
+📖 **Complete Reference:** `/Users/vadimcastro/vadimOS.md`  
+🔧 **Live Config:** `/Users/vadimcastro/.zshrc`  
+🏗️ **Infrastructure:** `/Users/vadimcastro/Desktop/PROJECTS/vadimOS/`  
+⚙️ **Claude Config:** `.claude/settings.local.json` (47+ permissions)

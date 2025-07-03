@@ -20,13 +20,18 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# Colored prompt with proper escape sequences
+# Git branch display function
+parse_git_branch() {
+    git branch 2> /dev/null | sed -n -e 's/^\* \(.*\)/[\1]/p'
+}
+
+# Colored prompt with git branch display
 if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-    # Green user@host, blue path, white $
-    PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    # Green user@host, blue path, yellow git branch, white $
+    PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] \[\033[01;33m\]$(parse_git_branch)\[\033[00m\]\$ '
 else
-    # Fallback without colors
-    PS1='\u@\h:\w\$ '
+    # Fallback without colors but with git branch
+    PS1='\u@\h:\w $(parse_git_branch)\$ '
 fi
 
 # Set terminal title

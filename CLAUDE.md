@@ -200,6 +200,22 @@ This project combines original DLM photo gallery functionality with modern vadim
 
 ## 🖥️ vadimOS Integration
 
+## 🎯 vadimOS Development Values
+
+**Core Principles:**
+- **Efficiency First**: Every command should save time and reduce cognitive load
+- **Universal Consistency**: Same commands work across all projects
+- **Context Awareness**: Tools should understand the project environment
+- **Fail Fast**: Clear error messages and quick recovery paths
+- **Documentation as Code**: Keep docs in sync with reality
+
+**Workflow Philosophy:**
+- Minimize context switching between tools and projects
+- Automate repetitive tasks (navigation, setup, deployment)
+- Make complex operations simple and discoverable
+- Ensure every project follows the same patterns
+- Optimize for developer happiness and productivity
+
 ## 🔧 Core vadimOS Commands
 **Project Navigation:** `dlm` → auto-navigate here  
 **Development:** `gs`, `gcp "msg"`, `glog`, `dev`, `deploy`, `auth-setup`  

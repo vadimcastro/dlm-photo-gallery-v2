@@ -1,4 +1,4 @@
-.PHONY: dev dev-docker dev-npm prod down clean migrate logs format help kd quick-deploy deploy-clean
+.PHONY: dev dev-docker dev-npm prod down clean migrate logs format help kd quick-deploy deploy-clean auth-setup
 # Development commands
 dev:
 	@echo "🚀 Starting Next.js development (with Google Photos API)..."
@@ -237,6 +237,11 @@ kd:
 quick-deploy: droplet-quick-deploy
 
 deploy-clean: droplet-clean-rebuild
+
+# Auth setup
+auth-setup:
+	@echo "🔑 Starting streamlined OAuth setup..."
+	./scripts/auth-setup.sh
 # Help command
 help:
 	@echo "🚀 dlm-photo-gallery-v2 Development Commands"
@@ -249,6 +254,7 @@ help:
 	@echo "  make build                  - 🔨 Build frontend"
 	@echo "  make test-api               - 🧪 Test Google Photos API"
 	@echo "  make format                 - Format code (Prettier + Black)"
+	@echo "  make auth-setup             - 🔑 Streamlined OAuth setup (complete flow)"
 	@echo "  make setup-local-auth       - Configure local authentication"
 	@echo "  make logs                   - Show container logs"
 	@echo "  make clean                  - Clean up environment"

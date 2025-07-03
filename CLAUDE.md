@@ -4,8 +4,8 @@
 
 ### Local Development
 ```bash
+make auth-setup       # 🔑 First-time OAuth setup (streamlined)
 make dev              # Start all services locally
-make setup-local-auth # First-time auth setup
 ```
 
 ### Production Deployment
@@ -33,9 +33,9 @@ make droplet-clean-rebuild    # 🧹 Deep clean rebuild (full cache clear)
 ### Quick Navigation & Git
 ```bash
 # Add project alias to your shell config:
-# alias dlm-photo-gallery-v2="cd ~/Desktop/PROJECTS/dlm-photo-gallery-v2"
+# dlm() { cd /Users/vadimcastro/Desktop/DAN/dlm-photo-gallery-v2; }
 
-dlm-photo-gallery-v2          # Navigate to project
+dlm                       # Navigate to project (vadimOS function)
 gs                        # Git status
 gcp "message"             # Add, commit, push in one command
 glog                      # Show last commit
@@ -43,6 +43,7 @@ glog                      # Show last commit
 
 ### Development Shortcuts
 ```bash
+auth-setup                # 🔑 Complete OAuth setup (alias for make auth-setup)
 dev                       # Start development environment (alias for make dev)
 deploy                    # Deploy current local branch to production (alias)
 quick-deploy              # ⚡ Fast deployment (alias for make droplet-quick-deploy)
@@ -53,8 +54,8 @@ logs                      # View container logs (alias for make droplet-logs)
 
 ### Development
 ```bash
+make auth-setup           # 🔑 Streamlined OAuth setup (recommended)
 make dev                  # Start development environment
-make setup-local-auth     # Configure local authentication
 make logs                 # View container logs
 make clean                # Clean up environment
 ```
@@ -163,9 +164,10 @@ make droplet-force-rebuild  # Force clean rebuild
 - **Status**: ✅ Fully functional with Next.js API routes
 - **OAuth Client**: 832495994403-09dn...apps.googleusercontent.com
 - **Quota**: 500 requests/day (increased from 250)
-- **Token Generator**: `python3 get_oauth_token.py`
-- **Environment**: `frontend/.env.local`
+- **Token Generator**: `python3 get_oauth_token.py` (now uses `.env.development`)
+- **Environment**: `.env.development` (secure, git-ignored)
 - **Scopes**: `photoslibrary.readonly`
+- **Setup**: Run `make auth-setup` for complete automated OAuth flow
 
 ### API Endpoints
 - **Albums**: `GET /api/v1/photos/albums` - Returns categorized photos
@@ -196,7 +198,46 @@ This project combines original DLM photo gallery functionality with modern vadim
 - ✅ Advanced UI components (ProfileDropdown, AdminMenu)
 - ✅ Mobile-first responsive design
 
-For advanced configuration and shell optimization, see the original vadimcastro.me CLAUDE.md and vadimOS.md documentation.
+## 🖥️ vadimOS Integration
+
+## 🔧 Core vadimOS Commands
+**Project Navigation:** `dlm` → auto-navigate here  
+**Development:** `gs`, `gcp "msg"`, `glog`, `dev`, `deploy`, `auth-setup`  
+**Photo Gallery:** `quick-deploy`, `logs`, `docs` (API docs)  
+**Utilities:** `kd`, `shortcuts`, `newtest`, `clean-dirs`  
+**Google OAuth:** Specialized `auth-setup` workflow for Photos API
+
+📖 **Complete Reference:** `/Users/vadimcastro/vadimOS.md`  
+🔧 **Live Config:** `/Users/vadimcastro/.zshrc`  
+⚙️ **Claude Config:** `.claude/settings.local.json` (47 permissions)
+
+### **Current Compatibility Status:**
+✅ **Universal Commands**: All vadimOS workflow commands active  
+✅ **Context Awareness**: vadimOS.md + .zshrc read access enabled  
+✅ **Zero Approval Prompts**: 47+ commands pre-approved
+
+### **Complete Developer Workflow:**
+```bash
+dlm                       # Navigate to project (alias auto-navigation)
+auth-setup                # One-time OAuth setup (universal alias)
+gs                        # Check git status
+gcp "my changes"          # Commit and push (universal function)
+dev                       # Start development (universal alias)
+deploy                    # Deploy to production (universal alias)
+logs                      # View container logs (universal alias)
+```
+
+### **Innovation Source for vadimOS**
+DLM Photo Gallery v2 serves as the **primary innovation lab** for vadimOS workflow enhancements:
+
+- **🔑 `auth-setup` command**: Pioneered here, now being standardized across all vadim projects
+- **🛠️ Utility commands**: `kd` (rm -rf), `deploy-clean`, `quick-deploy` originated from DLM development needs
+- **📱 Mobile-first aliases**: Responsive workflow patterns developed for photo gallery management
+- **🔄 Branch sync automation**: Advanced git workflows tested in production photo deployments
+
+**Integration Status**: DLM serves as the **prototype environment** where new vadimOS features are developed and proven before ecosystem-wide adoption.
+
+For complete vadimOS documentation and cross-project workflow patterns, see `/Users/vadimcastro/vadimOS.md`.
 
 ## 🔍 Google Photos API Resolution (v2.1)
 
@@ -249,29 +290,108 @@ frontend/.env.local           # Working credentials
 
 ## 🔒 Security & Git History
 
-### ✅ **SECURITY RESOLVED** (v2.1.1)
-- **Issue**: OAuth credentials exposed in commit history  
-- **Solution**: Created clean `feature/redesign-clean` branch from safe commit
-- **Status**: All secrets removed from working branch history
-- **Ready**: Can safely push to GitHub without secret detection
+### ✅ **SECURITY RESOLVED** (v2.1.3)
+- **Issue**: OAuth credentials in git history and tracked files
+- **Solution**: Clean git history + comprehensive security audit
+- **Status**: All secrets removed from git tracking and project template
+- **Ready**: Safe to push to GitHub with bulletproof credential management
 
-### Clean Branch History:
-- `feature/redesign-clean`: ✅ No exposed credentials
-- `master`: ✅ Reset to clean state before credentials
-- `feature/redesign`: ❌ Deleted (contained secrets)
+### Git Security Configuration:
+- `.gitignore`: Ignores all `.env*` files except `.env.example`
+- `.env.development`: Git-ignored, contains working credentials
+- `get_oauth_token.py`: Updated to use environment variables
+- **Template Security**: Fixed broken imports and credential exposure in vadim-project-template
+- **Settings Protection**: Added `.claude/settings.local.json` to `.gitignore`
+- **Workflow**: Copy `.env.example` → `.env.development` for new setups
 
-### Useful Aliases Added:
+## 📱 OAuth Setup Guide
+
+### 🔑 **NEW: Streamlined Auth Setup (`make auth-setup`)**
+
+**✅ SAFE - One Command Does Everything:**
 ```bash
+make auth-setup
+```
+
+**What It Does:**
+1. **Creates** `.env.development` from template (if missing)
+2. **Validates** your Google OAuth credentials
+3. **Launches** OAuth flow automatically  
+4. **Updates** `.env.development` with refresh token
+5. **Ready** to use - no manual steps!
+
+### **When to Use:**
+- ✅ **First-time setup** (fresh clone)
+- ✅ **Token refresh** (expired credentials)
+- ✅ **After credential changes** (new OAuth client)
+
+### **Prerequisites:**
+- Google OAuth credentials in `.env.development`:
+  - `GOOGLE_CLIENT_ID=832495994403-...`
+  - `GOOGLE_CLIENT_SECRET=GOCSPX-...`
+- Port 5000 available for OAuth callback
+
+### **Safety Guarantees:**
+- ❌ Never overwrites without permission
+- ✅ Always asks before regenerating tokens
+- ✅ Creates backup files automatically
+- ✅ Validates configuration before proceeding
+
+### **Traditional Setup (Still Available):**
+```bash
+cp .env.example .env.development  # Copy template
+# Edit .env.development with credentials
+python3 get_oauth_token.py        # Generate token manually
+# Copy token back to .env.development
+```
+
+## 🚀 Universal Workflow System (v2.1.3)
+
+### **Major vadimOS Enhancement**
+DLM Photo Gallery v2 now serves as the **primary development lab** for universal workflow systems, with innovations that have been rolled out ecosystem-wide:
+
+### **New Universal Commands:**
+```bash
+# Enhanced Project Creation
+newtest                   # 🧪 Create standardized test projects (mom/meow/mom@mom.com)
+newrun                    # 🚀 Interactive project creation + auto-start dev
+clean-dirs                # 🧹 Clean up testing directories with validation
+docs                      # 📚 Quick API documentation access
+
 # Development workflow
+auth-setup                # 🔑 Complete OAuth setup
 down                      # Stop all services  
 clean                     # Clean environment
 help                      # Show all make commands
-kd path=/path/to/delete   # Safe force delete with validation
+kd /path/to/delete        # Quick delete (rm -rf)
 quick-deploy              # Alias for droplet-quick-deploy
 deploy-clean              # Alias for droplet-clean-rebuild
+shortcuts                 # 📋 Enhanced alias reference (organized categories)
 
-# Git shortcuts (via Claude settings)
+# Git shortcuts (via vadimOS)
 gs                        # Git status
 gcp "message"             # Add, commit, push
 glog                      # Show last commit
+dlm                       # Navigate to project directory
 ```
+
+### **Enhanced shortcuts() Function:**
+The `shortcuts` command now provides a comprehensive, organized display of all available aliases:
+- **8 organized categories**: Project Navigation, Git, System, Docker, etc.
+- **Complete coverage**: All universal aliases, functions, and utility commands
+- **Clear descriptions**: Easy-to-understand command explanations
+- **vadimOS.md reference**: Links to complete documentation
+- **No grep parsing**: Reliable static output that always works
+
+### **Template Improvements:**
+- ✅ **Fixed broken imports**: Removed faulty "projects" module causing errors
+- ✅ **UI component updates**: Replaced 404 profile images with Lucide User icons
+- ✅ **API docs links**: Fixed FastAPI documentation endpoints
+- ✅ **Mobile responsiveness**: Enhanced login modal and responsive design
+- ✅ **Standardized test data**: All test projects now use consistent mom/meow credentials
+
+### **Cross-Project Impact:**
+- 🔄 **5 projects updated**: All vadim-project-template derivatives now have unified workflows
+- 📋 **Standardized naming**: `testing`, `testing1`, `testing2` pattern for test projects
+- 🔧 **Universal commands**: Same aliases work across all projects with auto-detection
+- 🎯 **Consistent UX**: Login modals, API access, and development flows standardized

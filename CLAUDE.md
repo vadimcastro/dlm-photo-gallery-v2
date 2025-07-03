@@ -4,8 +4,8 @@
 
 ### Local Development
 ```bash
+make auth-setup       # 🔑 First-time OAuth setup (streamlined)
 make dev              # Start all services locally
-make setup-local-auth # First-time auth setup
 ```
 
 ### Production Deployment
@@ -33,9 +33,9 @@ make droplet-clean-rebuild    # 🧹 Deep clean rebuild (full cache clear)
 ### Quick Navigation & Git
 ```bash
 # Add project alias to your shell config:
-# alias dlm-photo-gallery-v2="cd ~/Desktop/PROJECTS/dlm-photo-gallery-v2"
+# dlm() { cd /Users/vadimcastro/Desktop/PROJECTS/dlm-photo-gallery-v2; }
 
-dlm-photo-gallery-v2          # Navigate to project
+dlm                       # Navigate to project (vadimOS function)
 gs                        # Git status
 gcp "message"             # Add, commit, push in one command
 glog                      # Show last commit
@@ -43,6 +43,7 @@ glog                      # Show last commit
 
 ### Development Shortcuts
 ```bash
+auth-setup                # 🔑 Complete OAuth setup (alias for make auth-setup)
 dev                       # Start development environment (alias for make dev)
 deploy                    # Deploy current local branch to production (alias)
 quick-deploy              # ⚡ Fast deployment (alias for make droplet-quick-deploy)
@@ -53,8 +54,8 @@ logs                      # View container logs (alias for make droplet-logs)
 
 ### Development
 ```bash
+make auth-setup           # 🔑 Streamlined OAuth setup (recommended)
 make dev                  # Start development environment
-make setup-local-auth     # Configure local authentication
 make logs                 # View container logs
 make clean                # Clean up environment
 ```
@@ -163,9 +164,10 @@ make droplet-force-rebuild  # Force clean rebuild
 - **Status**: ✅ Fully functional with Next.js API routes
 - **OAuth Client**: 832495994403-09dn...apps.googleusercontent.com
 - **Quota**: 500 requests/day (increased from 250)
-- **Token Generator**: `python3 get_oauth_token.py`
-- **Environment**: `frontend/.env.local`
+- **Token Generator**: `python3 get_oauth_token.py` (now uses `.env.development`)
+- **Environment**: `.env.development` (secure, git-ignored)
 - **Scopes**: `photoslibrary.readonly`
+- **Setup**: Run `make auth-setup` for complete automated OAuth flow
 
 ### API Endpoints
 - **Albums**: `GET /api/v1/photos/albums` - Returns categorized photos
@@ -196,82 +198,32 @@ This project combines original DLM photo gallery functionality with modern vadim
 - ✅ Advanced UI components (ProfileDropdown, AdminMenu)
 - ✅ Mobile-first responsive design
 
-For advanced configuration and shell optimization, see the original vadimcastro.me CLAUDE.md and vadimOS.md documentation.
+## 🖥️ vadimOS Integration
 
-## 🔍 Google Photos API Resolution (v2.1)
+## 🎯 vadimOS Development Values
 
-### Problem Solved
-- **Root Cause**: Original OAuth client was deleted from Google Cloud Console
-- **Error**: `"deleted_client"` - prevented both dlm1 and dlm2 from working
-- **Solution**: Created new OAuth client with proper Photos Library API access
+**Core Principles:**
+- **Efficiency First**: Every command should save time and reduce cognitive load
+- **Universal Consistency**: Same commands work across all projects
+- **Context Awareness**: Tools should understand the project environment
+- **Fail Fast**: Clear error messages and quick recovery paths
+- **Documentation as Code**: Keep docs in sync with reality
 
-### Implementation Details
-- **Architecture**: Next.js API routes instead of FastAPI proxy
-- **Authentication**: OAuth2 with refresh token caching
-- **Token Management**: Automatic refresh with 55-minute buffer
-- **Error Handling**: Comprehensive logging and mock data fallback
-- **Quota Management**: 500 requests/day, graceful degradation
+**Workflow Philosophy:**
+- Minimize context switching between tools and projects
+- Automate repetitive tasks (navigation, setup, deployment)
+- Make complex operations simple and discoverable
+- Ensure every project follows the same patterns
+- Optimize for developer happiness and productivity
 
-### Files Created/Modified
-```
-frontend/src/app/api/v1/photos/
-├── albums/route.ts           # Main photos API
-└── image/[photoId]/route.ts  # Image proxy API
-frontend/src/app/api/
-├── auth/url/route.ts         # OAuth initiation
-├── auth/callback/route.ts    # OAuth completion
-└── debug/route.ts            # Environment debugging
-get_oauth_token.py            # Token generation script
-frontend/.env.local           # Working credentials
-```
+## 🔧 Core vadimOS Commands
+**Project Navigation:** `dlm` → auto-navigate here  
+**Development:** `gs`, `gcp "msg"`, `glog`, `dev`, `deploy`, `auth-setup`  
+**Photo Gallery:** `quick-deploy`, `logs`, `docs` (API docs)  
+**Utilities:** `kd`, `shortcuts`, `newtest`, `clean-dirs`  
+**Google OAuth:** Specialized `auth-setup` workflow for Photos API
 
-### Next Steps
-- **Immediate**: UI/UX redesign to match modern dlm1 styling
-- **Short-term**: Production deployment with working credentials
-- **Long-term**: Album management, performance optimization
-
-## 🎨 UI Development Roadmap
-
-### Current State
-- ✅ **Functionality**: All features working (auth, API, filtering, modal)
-- ✅ **Data**: Real Google Photos loading (quota permitting)
-- ⚠️  **Styling**: Basic Tailwind CSS, needs modern design
-
-### Redesign Goals
-- **Match dlm1**: Replicate modern, beautiful UI from working version
-- **Enhanced**: Improved mobile responsiveness and interactions
-- **Performance**: Optimized image loading and caching
-
-### Development Branch  
-- **Branch**: `feature/redesign-clean` ✅ **CLEAN HISTORY**
-- **Focus**: UI/UX improvements without breaking working Google integration
-- **Approach**: Component-by-component enhancement
-
-## 🔒 Security & Git History
-
-### ✅ **SECURITY RESOLVED** (v2.1.1)
-- **Issue**: OAuth credentials exposed in commit history  
-- **Solution**: Created clean `feature/redesign-clean` branch from safe commit
-- **Status**: All secrets removed from working branch history
-- **Ready**: Can safely push to GitHub without secret detection
-
-### Clean Branch History:
-- `feature/redesign-clean`: ✅ No exposed credentials
-- `master`: ✅ Reset to clean state before credentials
-- `feature/redesign`: ❌ Deleted (contained secrets)
-
-### Useful Aliases Added:
-```bash
-# Development workflow
-down                      # Stop all services  
-clean                     # Clean environment
-help                      # Show all make commands
-kd path=/path/to/delete   # Safe force delete with validation
-quick-deploy              # Alias for droplet-quick-deploy
-deploy-clean              # Alias for droplet-clean-rebuild
-
-# Git shortcuts (via Claude settings)
-gs                        # Git status
-gcp "message"             # Add, commit, push
-glog                      # Show last commit
-```
+📖 **Complete Reference:** `/Users/vadimcastro/vadimOS.md`  
+🔧 **Live Config:** `/Users/vadimcastro/.zshrc`  
+🏗️ **Infrastructure:** `/Users/vadimcastro/Desktop/PROJECTS/vadimOS/`  
+⚙️ **Claude Config:** `.claude/settings.local.json` (47+ permissions)

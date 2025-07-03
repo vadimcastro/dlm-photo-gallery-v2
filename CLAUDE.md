@@ -200,15 +200,21 @@ This project combines original DLM photo gallery functionality with modern vadim
 
 ## 🖥️ vadimOS Integration
 
-### **Shell Configuration Reference:**
-📋 **Complete Configuration**: `/Users/vadimcastro/vadimOS.md`  
-🔧 **Live Config**: `/Users/vadimcastro/.zshrc`  
-🎯 **Project Alias**: `dlm` (navigate to this project)
+## 🔧 Core vadimOS Commands
+**Project Navigation:** `dlm` → auto-navigate here  
+**Development:** `gs`, `gcp "msg"`, `glog`, `dev`, `deploy`, `auth-setup`  
+**Photo Gallery:** `quick-deploy`, `logs`, `docs` (API docs)  
+**Utilities:** `kd`, `shortcuts`, `newtest`, `clean-dirs`  
+**Google OAuth:** Specialized `auth-setup` workflow for Photos API
+
+📖 **Complete Reference:** `/Users/vadimcastro/vadimOS.md`  
+🔧 **Live Config:** `/Users/vadimcastro/.zshrc`  
+⚙️ **Claude Config:** `.claude/settings.local.json` (47 permissions)
 
 ### **Current Compatibility Status:**
-✅ **Universal Commands**: `gs`, `gcp`, `glog`, `dev`, `deploy`, `quick-deploy`, `logs`, `auth-setup`  
-✅ **Project Navigation**: `dlm` → auto-navigate to dlm-photo-gallery-v2  
-✅ **Utility Commands**: `kd`, `deploy-clean`, `docs`, `newtest`, `clean-dirs`
+✅ **Universal Commands**: All vadimOS workflow commands active  
+✅ **Context Awareness**: vadimOS.md + .zshrc read access enabled  
+✅ **Zero Approval Prompts**: 47+ commands pre-approved
 
 ### **Complete Developer Workflow:**
 ```bash

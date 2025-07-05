@@ -1,4 +1,4 @@
-.PHONY: dev dev-docker dev-npm prod down clean migrate logs format help kd quick-deploy deploy-clean auth-setup
+.PHONY: dev dev-docker dev-npm prod down clean migrate logs format help kd quick-deploy deploy-clean auth-setup health health-docker health-containers health-api
 # Development commands
 dev:
 	@echo "🚀 Starting Next.js development (with Google Photos API)..."
@@ -297,3 +297,23 @@ help:
 	@echo "⚙️ Setup:"
 	@echo "  make setup-prod-env         - Set up production environment"
 	@echo "  make setup-local-auth       - Configure local authentication"
+	@echo ""
+	@echo "🏥 Health Checks:"
+	@echo "  make health                 - Comprehensive system health check"
+	@echo "  make health-docker          - Docker installation & daemon check"
+	@echo "  make health-containers      - Running containers status"
+	@echo "  make health-api             - API endpoints availability"
+
+# Health check commands
+health:
+	@echo "🏥 Running comprehensive health check..."
+	@./scripts/docker-health.sh && health
+health-docker:
+	@echo "🐳 Checking Docker health..."
+	@./scripts/docker-health.sh && health_docker
+health-containers:
+	@echo "📦 Checking container health..."
+	@./scripts/docker-health.sh && health_containers
+health-api:
+	@echo "🌐 Checking API health..."
+	@./scripts/docker-health.sh && health_api

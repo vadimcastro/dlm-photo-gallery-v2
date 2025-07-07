@@ -2,6 +2,12 @@
 # Use with: docker compose -f ../../vadimOS/docker/docker-compose.base.yml -f docker-compose.yml
 
 services:
+  # Override database name for dlm-photo-gallery-v2
   db:
+    environment:
+      - POSTGRES_DB=dlm-photo-gallery-v2
+      
+  # Override API database connection
+  api:
     environment:
       - POSTGRES_DB=dlm-photo-gallery-v2

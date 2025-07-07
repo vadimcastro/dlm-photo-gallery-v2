@@ -38,7 +38,7 @@ services:
       - POSTGRES_HOST=db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=dlm_photo_gallery_v2
+      - POSTGRES_DB=dlm-photo-gallery-v2
       - REDIS_HOST=redis
       - REDIS_PORT=6379
     env_file:
@@ -59,7 +59,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=dlm_photo_gallery_v2
+      - POSTGRES_DB=dlm-photo-gallery-v2
     ports:
       - "5432:5432"
     volumes:

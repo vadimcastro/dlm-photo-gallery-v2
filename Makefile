@@ -1,4 +1,4 @@
-.PHONY: dev dev-docker dev-npm prod down clean migrate logs format help kd quick-deploy deploy-clean
+.PHONY: dev dev-docker dev-npm prod down clean migrate logs format help kd quick-deploy deploy-clean auth-setup build-base dev-ultra health health-docker health-containers health-api
 # Development commands
 dev:
 	@echo "🚀 Starting Next.js development (with Google Photos API)..."
@@ -7,6 +7,14 @@ dev:
 dev-docker:
 	@echo "🐳 Starting full Docker development environment..."
 	cd docker && docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+
+build-base:
+	@echo "🏗️ Building dlm-photo-gallery-v2 base images..."
+	./scripts/build-base-images.sh
+
+dev-ultra:
+	@echo "🚀 Starting ULTRA development environment (requires base images)..."
+	cd docker && docker compose -f docker-compose.dev.ultra.yml up
 
 dev-debug:
 	@echo "Starting development environment with debug logs..."
@@ -237,6 +245,11 @@ kd:
 quick-deploy: droplet-quick-deploy
 
 deploy-clean: droplet-clean-rebuild
+
+# Auth setup
+auth-setup:
+	@echo "🔑 Starting streamlined OAuth setup..."
+	./scripts/auth-setup.sh
 # Help command
 help:
 	@echo "🚀 dlm-photo-gallery-v2 Development Commands"
@@ -249,6 +262,7 @@ help:
 	@echo "  make build                  - 🔨 Build frontend"
 	@echo "  make test-api               - 🧪 Test Google Photos API"
 	@echo "  make format                 - Format code (Prettier + Black)"
+	@echo "  make auth-setup             - 🔑 Streamlined OAuth setup (complete flow)"
 	@echo "  make setup-local-auth       - Configure local authentication"
 	@echo "  make logs                   - Show container logs"
 	@echo "  make clean                  - Clean up environment"
@@ -291,3 +305,23 @@ help:
 	@echo "⚙️ Setup:"
 	@echo "  make setup-prod-env         - Set up production environment"
 	@echo "  make setup-local-auth       - Configure local authentication"
+	@echo ""
+	@echo "🏥 Health Checks:"
+	@echo "  make health                 - Comprehensive system health check"
+	@echo "  make health-docker          - Docker installation & daemon check"
+	@echo "  make health-containers      - Running containers status"
+	@echo "  make health-api             - API endpoints availability"
+
+# Health check commands
+health:
+	@echo "🏥 Running comprehensive health check..."
+	@./scripts/docker-health.sh && health
+health-docker:
+	@echo "🐳 Checking Docker health..."
+	@./scripts/docker-health.sh && health_docker
+health-containers:
+	@echo "📦 Checking container health..."
+	@./scripts/docker-health.sh && health_containers
+health-api:
+	@echo "🌐 Checking API health..."
+	@./scripts/docker-health.sh && health_api

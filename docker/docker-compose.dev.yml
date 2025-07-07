@@ -11,4 +11,6 @@ services:
       
   api:
     env_file:
-      - ../.env.development
+      - /Users/vadimcastro/Desktop/PROJECTS/dlm-photo-gallery-v2/.env.development
+    volumes:
+      - ../backend/.env:/app/.env:ro

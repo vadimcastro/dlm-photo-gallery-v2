@@ -1,0 +1,39 @@
+# Dockerfile for dlm-photo-backend-base  
+# Pre-built base image for dlm-photo-gallery-v2 backend with photo gallery specific dependencies
+
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies for dlm-photo-gallery-v2 (photo/API specific)
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    curl \
+    wget \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements.txt
+COPY backend/requirements-minimal.txt .
+
+# Install Python dependencies (photo gallery specific)
+RUN pip install --no-cache-dir -r requirements-minimal.txt
+
+# Pre-install DLM specific packages for photo processing and performance
+RUN pip install --no-cache-dir \
+    fastapi-cache2==0.2.1 \
+    slowapi==0.1.9 \
+    httpx==0.25.2
+
+# Create non-root user for security
+RUN useradd --create-home --shell /bin/bash app
+USER app
+
+# Health check for API readiness
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Default command
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

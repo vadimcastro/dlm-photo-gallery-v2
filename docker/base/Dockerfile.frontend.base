@@ -1,0 +1,36 @@
+# Dockerfile for dlm-photo-frontend-base
+# Pre-built base image for dlm-photo-gallery-v2 frontend with photo gallery specific dependencies
+
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache git curl wget
+
+# Copy package.json to install dependencies
+COPY frontend/package.json frontend/package-lock.json ./
+
+# Install Node.js dependencies (photo gallery specific)
+RUN npm ci
+
+# Pre-install DLM specific packages for Google Photos API and photo gallery
+RUN npm install \
+    google-auth-library \
+    googleapis \
+    @radix-ui/react-toast \
+    next-themes \
+    class-variance-authority \
+    clsx \
+    tailwind-merge
+
+# Create optimized node_modules cache
+RUN npm cache clean --force
+
+# Health check for container readiness
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:3000 || exit 1
+
+# Default command
+CMD ["npm", "run", "dev"]

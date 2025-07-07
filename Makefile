@@ -1,4 +1,4 @@
-.PHONY: dev dev-docker dev-npm prod down clean migrate logs format help kd quick-deploy deploy-clean auth-setup health health-docker health-containers health-api
+.PHONY: dev dev-docker dev-npm prod down clean migrate logs format help kd quick-deploy deploy-clean auth-setup build-base dev-ultra health health-docker health-containers health-api
 # Development commands
 dev:
 	@echo "🚀 Starting Next.js development (with Google Photos API)..."
@@ -7,6 +7,14 @@ dev:
 dev-docker:
 	@echo "🐳 Starting full Docker development environment..."
 	cd docker && docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+
+build-base:
+	@echo "🏗️ Building dlm-photo-gallery-v2 base images..."
+	./scripts/build-base-images.sh
+
+dev-ultra:
+	@echo "🚀 Starting ULTRA development environment (requires base images)..."
+	cd docker && docker compose -f docker-compose.dev.ultra.yml up
 
 dev-debug:
 	@echo "Starting development environment with debug logs..."

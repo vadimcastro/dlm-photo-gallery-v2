@@ -45,7 +45,7 @@ fi
 echo -e "\n${BLUE}🔍 Validating environment configuration...${NC}"
 
 # Source the environment file to check variables
-if ! grep -q "GOOGLE_CLIENT_ID=.*googleapis.com" "$ENV_FILE"; then
+if ! grep -q "GOOGLE_CLIENT_ID=.*googleusercontent.com" "$ENV_FILE"; then
     echo -e "${RED}❌ Error: GOOGLE_CLIENT_ID not properly configured in .env.development${NC}"
     echo -e "${YELLOW}Please edit $ENV_FILE and add your Google OAuth credentials${NC}"
     exit 1

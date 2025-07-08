@@ -56,6 +56,7 @@ logs                      # View container logs (alias for make droplet-logs)
 ```bash
 make auth-setup           # 🔑 Streamlined OAuth setup (recommended)
 make dev                  # Start development environment
+make dev-ultra            # ⚡ Ultra-fast development (breakthrough volume strategy)
 make logs                 # View container logs
 make clean                # Clean up environment
 ```
@@ -182,6 +183,13 @@ make droplet-force-rebuild  # Force clean rebuild
 
 This project combines original DLM photo gallery functionality with modern vadim-project-template infrastructure:
 
+### **Volume Mount Fix (July 2025)**
+- **Fixed dlmb alias mounting problems**: Containers now mount to correct project directories instead of parent PROJECTS directory
+- **Aligned with vadimOS ultra-dev pattern**: Consistent absolute path strategy matching vadimcastro.me
+- **Resolved Docker context issues**: No more `docker: no such file or directory` errors
+- **Performance improvement**: Ultra-fast development with pre-built base images
+
+
 **Original DLM v1 Features Preserved:**
 - ✅ Google Photos API integration with OAuth2 flow
 - ✅ Album-based photo categorization system
@@ -197,6 +205,50 @@ This project combines original DLM photo gallery functionality with modern vadim
 - ✅ Production-ready Makefile commands
 - ✅ Advanced UI components (ProfileDropdown, AdminMenu)
 - ✅ Mobile-first responsive design
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

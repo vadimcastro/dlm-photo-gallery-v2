@@ -61,3 +61,9 @@ deploy-clean: droplet-clean-rebuild
 auth-setup:
 	@echo "🔑 Starting streamlined OAuth setup..."
 	./scripts/auth-setup.sh
+
+# Override setup-local-auth to use correct path
+setup-local-auth:
+	@echo "Setting up local development authentication..."
+	./scripts/auth-setup.sh
+

@@ -98,26 +98,16 @@ make help                      # 📖 Show all available commands
 
 ## 🎯 Current Development Focus
 
-### ✅ Completed Features (v2.3 - Latest)
-- **🏗️ Standardized Photo Service Architecture**: Complete service abstraction with IPhotoService interface
-- **📸 Diverse Photo System**: Lorem Flickr integration with unique timestamp-based cache busting
-- **🔄 Google Photos Fallback**: Preserved as backup with automatic fallback logic
-- **🎯 PhotoServiceFactory**: Intelligent service selection and management
-- **🖼️ Advanced Image Proxy**: Multi-size support (small/medium/large) with aspect ratio preservation
-- **🎨 Perfect Masonry Gallery**: Responsive 3-column layout with strategic aspect ratios
-- **⚡ Ultra-Fast Development**: Mock data provides instant, reliable photo loading
-- **🛠️ Service Management API**: Runtime service switching and status monitoring
-- **📱 Mobile-First UI**: Clean "DLM" branding with elegant champagne theme
-- **🔍 Smart Category Display**: Clean category filtering without page titles
-- **🎭 Champagne Design Theme**: Professional champagne color palette with Libertinus Mono typography
-
-### 🎯 Current Status (July 2025)
-- **Primary Data Source**: 📸 **Lorem Flickr Service** (Dynamic photos with timestamp-based uniqueness)
-- **Image Quality**: ✅ **Category-Appropriate Content** - wildlife, portraits, landscapes, architecture, abstract
-- **Performance**: ⚡ **Instant Loading** - reliable service with proper caching and aspect ratio handling
-- **Fallback**: 🔄 **Google Photos Ready** - can enable with `USE_MOCK_DATA=false`
-- **UI State**: 🎨 **Production Ready** - elegant champagne theme with perfect masonry layout
-- **Design**: 🎭 **Champagne Theme** - sophisticated color palette with Libertinus Mono typography
+### ✅ Completed Features (v2.1)
+- **Google Photos Integration**: ✅ **WORKING** - OAuth2 API integration with album categorization
+- **Next.js API Routes**: Direct Google Photos API integration without FastAPI dependency
+- **Authentication Resolution**: Fixed deleted OAuth client, fresh token generation system
+- **Photo Gallery UI**: Masonry layout, category filtering, full-screen modal viewer (ready for redesign)
+- **Modern Infrastructure**: Next.js 14 + TypeScript, optimized Makefile commands
+- **Production Deployment**: Docker automation, DigitalOcean ready
+- **Advanced UI Components**: ProfileDropdown, AdminMenu, mobile-responsive design
+- **Image Optimization**: Proxy server with size parameters, caching, lazy loading
+- **Development Tools**: OAuth token generator, comprehensive debugging, mock data fallback
 
 ### 🔄 Branch Management
 ```bash
@@ -135,80 +125,16 @@ make deploy                                       # Deploy current branch
 make droplet-deploy branch=main                   # Deploy specific branch to droplet
 ```
 
-## 🏗️ Photo Service Architecture (v2.2)
-
-### Service Layer Design
-```typescript
-IPhotoService (Interface)
-├── MockPhotosService (Primary)
-│   ├── 40 curated Picsum photos
-│   ├── 5 categories with correct matching
-│   └── Instant loading (no external deps)
-├── GooglePhotosService (Fallback)
-│   ├── OAuth2 integration preserved
-│   ├── Album-based categorization
-│   └── Automatic token management
-└── PhotoServiceFactory
-    ├── Intelligent service selection
-    ├── Automatic fallback logic
-    └── Runtime service switching
-```
-
-### Photo Data Configuration
-```bash
-# Primary Mode (Default)
-USE_MOCK_DATA=true          # Uses curated Picsum photos
-
-# Google Photos Mode
-USE_MOCK_DATA=false         # Attempts Google Photos, falls back to mock
-
-# Service Management API
-POST /api/v1/photos/albums
-{"action": "getServiceStatus"}      # Check service health
-{"action": "switchService"}         # Runtime service switching
-{"action": "searchPhotos"}          # Search functionality
-{"action": "getPhotosByCategory"}   # Category filtering
-```
-
-### Curated Photo Categories
-- **Portraits**: Picsum IDs 91, 177, 203, 433, 494, 593, 659, 823
-- **Landscape**: Picsum IDs 1, 10, 15, 26, 39, 58, 72, 98
-- **Architecture**: Picsum IDs 2, 99, 164, 174, 246, 274, 318, 430
-- **Abstract**: Picsum IDs 35, 102, 147, 197, 257, 347, 423, 515
-- **Wildlife**: Picsum IDs 82, 169, 237, 326, 432, 548, 659, 718
-
 ## 🎨 Frontend Architecture
 
-### 🎭 Champagne Design Theme
-- **Primary Color**: `#EFD2A9` - Warm champagne for header/footer backgrounds
-- **Light Background**: `#F8EDD6` - Subtle champagne tint for main content areas
-- **Hover Accent**: `#75462F` - Rich brown for interactive elements and hover states
-- **Text Color**: `#000000` - Pure black for optimal readability and contrast
-- **Card Background**: `#FFFFFF` - Clean white for photo cards and content areas
-
-### Typography System
-- **Brand Font**: Libertinus Mono - Elegant monospace for headers, footer, and navigation
-- **Body Font**: Inter - Clean, readable sans-serif for general content
-- **Heading Font**: Playfair Display - Sophisticated serif for special headings
-- **Font Loading**: Google Fonts CDN integration for reliable delivery
-
 ### Design System
-- **Layout**: Mobile-first responsive design with breakpoints
-- **Spacing**: Consistent padding and margins using Tailwind CSS
-- **Icons**: Lucide React icons for clean, modern interface elements
-- **Shadows**: Subtle drop shadows for depth and card elevation
-- **Transitions**: Smooth hover effects and animations
-
-### Gallery Features
-- **Masonry Layout**: Responsive 3-column layout with strategic aspect ratios
-- **Image Proxy**: Multi-size support (small: 300x200, medium: 600x400, large: 1200x800)
-- **Category Filtering**: Real-time filtering with clean button controls
-- **Modal Viewer**: Full-screen photo viewing with large image display
-- **Smart Caching**: 24-hour browser cache with aspect ratio preservation
-- **Photo Diversity**: Lorem Flickr integration with timestamp-based uniqueness
+- **Typography**: Poppins (headings), Inter (body)
+- **Mobile-first**: `px-2 md:px-4`, `text-xs md:text-sm`
+- **Icons**: Lucide React icons
+- **Spacing**: Consistent responsive margins
 
 ### Contact Information
-- **Email**: danieminnock25@gmail.com
+- **Email**: dan@example.com
 - **Admin**: Dan
 
 ## 🚀 Deployment Workflow
@@ -246,13 +172,10 @@ make droplet-force-rebuild  # Force clean rebuild
 - **Scopes**: `photoslibrary.readonly`
 - **Setup**: Run `make auth-setup` for complete automated OAuth flow
 
-### API Endpoints (v2.2)
-- **Photos**: `GET /api/v1/photos/albums` - Returns all photos with categories
-- **Images**: `GET /api/v1/photos/image/[photoId]?size=medium` - Proxied images with resizing
-- **Service Management**: `POST /api/v1/photos/albums` - Service control and metadata
-- **Search**: `POST /api/v1/photos/albums {"action": "searchPhotos", "query": "landscape"}`
-- **Categories**: `POST /api/v1/photos/albums {"action": "getPhotosByCategory", "category": "portraits"}`
-- **Status**: `POST /api/v1/photos/albums {"action": "getServiceStatus"}` - Health check
+### API Endpoints
+- **Albums**: `GET /api/v1/photos/albums` - Returns categorized photos
+- **Images**: `GET /api/v1/photos/image/[photoId]?size=medium` - Proxied images
+- **Debug**: `GET /api/debug` - Environment variable check
 
 ### Production
 - Configure with: `make setup-prod-env`
@@ -285,7 +208,6 @@ This project combines original DLM photo gallery functionality with modern vadim
 - ✅ Production-ready Makefile commands
 - ✅ Advanced UI components (ProfileDropdown, AdminMenu)
 - ✅ Mobile-first responsive design
-
 
 
 

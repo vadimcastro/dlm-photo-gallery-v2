@@ -12,12 +12,11 @@ frontend/out/
 backend/dist/
 
 # Environment files (protect secrets)
-.env
-.env.local
-.env.development
-.env.production
-.env.production.local
-.env*.local
+.env*
+!.env.example
+
+# Claude Code settings (personal/machine-specific)
+.claude/settings.local.json
 
 # Service account keys
 google-service-account.json

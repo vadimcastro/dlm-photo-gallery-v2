@@ -1,67 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createPhotoServiceFactory } from '@/lib/services/PhotoServiceFactory';
 
-// Google OAuth2 configuration
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const GOOGLE_REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
+// Initialize the photo service factory
+const photoService = createPhotoServiceFactory();
 
-// Token cache
-let cachedToken: string | null = null;
-let tokenExpiry: number = 0;
-
-async function getAccessToken(): Promise<string> {
-  const now = Date.now();
-  
-  // Return cached token if valid and not expiring soon (55 minute buffer)
-  if (cachedToken && (tokenExpiry - now) > 55 * 60 * 1000) {
-    return cachedToken;
-  }
-
-  try {
-    const response = await fetch('https://oauth2.googleapis.com/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        client_id: GOOGLE_CLIENT_ID!,
-        client_secret: GOOGLE_CLIENT_SECRET!,
-        refresh_token: GOOGLE_REFRESH_TOKEN!,
-        grant_type: 'refresh_token',
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Token refresh failed: ${response.status}`);
-    }
-
-    const data = await response.json();
-    
-    if (data.access_token) {
-      cachedToken = data.access_token;
-      tokenExpiry = now + (data.expires_in * 1000);
-      return cachedToken;
-    }
-  } catch (error) {
-    console.error('Token refresh failed:', error);
-  }
-
-  throw new Error('Failed to obtain access token');
-}
-
-async function getMediaItem(photoId: string, accessToken: string) {
-  const response = await fetch(`https://photoslibrary.googleapis.com/v1/mediaItems/${photoId}`, {
-    headers: {
-      'Authorization': `Bearer ${accessToken}`
-    }
-  });
-
-  if (!response.ok) {
-    throw new Error(`Google Photos API error: ${response.status}`);
-  }
-
-  return response.json();
-}
+// Size configurations for different image sizes
+const SIZE_CONFIGS = {
+  small: { width: 300, height: 200 },
+  medium: { width: 600, height: 400 },
+  large: { width: 1200, height: 800 },
+  original: null // No resizing
+};
 
 export async function GET(
   request: NextRequest,
@@ -71,53 +20,85 @@ export async function GET(
     const { photoId } = params;
     const { searchParams } = new URL(request.url);
     const size = searchParams.get('size') || 'medium';
+    
+    console.log(`🖼️  Image Proxy: Fetching ${photoId} (size: ${size})`);
 
-    const accessToken = await getAccessToken();
-    const mediaItem = await getMediaItem(photoId, accessToken);
+    // Get photo details from service
+    const photoResponse = await photoService.getPhotoById(photoId);
+    const photo = photoResponse.data;
 
-    // Determine image dimensions based on size parameter
-    let imageDimensions = '';
-    switch (size) {
-      case 'full':
-        imageDimensions = '=w2048-h1536';
-        break;
-      case 'large':
-        imageDimensions = '=w1200-h900';
-        break;
-      case 'medium':
-      default:
-        imageDimensions = '=w800-h600';
-        break;
-      case 'small':
-        imageDimensions = '=w400-h300';
-        break;
+    if (!photo) {
+      console.error(`❌ Photo not found: ${photoId}`);
+      return NextResponse.json(
+        { error: 'Photo not found' },
+        { status: 404 }
+      );
     }
 
-    const imageUrl = mediaItem.baseUrl + imageDimensions;
+    // Get size configuration
+    const sizeConfig = SIZE_CONFIGS[size as keyof typeof SIZE_CONFIGS];
+    
+    // Build the image URL with size parameters
+    let imageUrl = photo.baseUrl;
+    
+    if (sizeConfig && photo.baseUrl.includes('loremflickr.com')) {
+      // For Lorem Flickr, maintain aspect ratio when resizing
+      const aspectRatio = photo.height / photo.width;
+      let newWidth = sizeConfig.width;
+      let newHeight = Math.round(sizeConfig.width * aspectRatio);
+      
+      // If height exceeds max, adjust width to maintain aspect ratio
+      if (newHeight > sizeConfig.height) {
+        newHeight = sizeConfig.height;
+        newWidth = Math.round(sizeConfig.height / aspectRatio);
+      }
+      
+      // Replace dimensions in Lorem Flickr URL
+      imageUrl = photo.baseUrl.replace(/\/(\d+)\/(\d+)\//, `/${newWidth}/${newHeight}/`);
+    } else if (sizeConfig && photo.baseUrl.includes('lh3.googleusercontent.com')) {
+      // For Google Photos, add size parameters
+      imageUrl = `${photo.baseUrl}=w${sizeConfig.width}-h${sizeConfig.height}`;
+    }
+
+    console.log(`🖼️  Image Proxy: Proxying ${imageUrl}`);
 
     // Fetch the image
-    const imageResponse = await fetch(imageUrl);
-    
+    const imageResponse = await fetch(imageUrl, {
+      headers: {
+        'User-Agent': 'DLM-Photo-Gallery/2.0',
+      },
+    });
+
     if (!imageResponse.ok) {
-      throw new Error(`Failed to fetch image: ${imageResponse.status}`);
+      console.error(`❌ Failed to fetch image: ${imageResponse.status}`);
+      return NextResponse.json(
+        { error: 'Failed to fetch image' },
+        { status: imageResponse.status }
+      );
     }
 
-    // Get the image as a stream
+    // Get image data and content type
     const imageBuffer = await imageResponse.arrayBuffer();
+    const contentType = imageResponse.headers.get('content-type') || 'image/jpeg';
 
-    // Return the image with proper headers
+    console.log(`✅ Image Proxy: Successfully served ${photoId} (${imageBuffer.byteLength} bytes)`);
+
+    // Return the image with appropriate headers
     return new NextResponse(imageBuffer, {
+      status: 200,
       headers: {
-        'Content-Type': imageResponse.headers.get('content-type') || 'image/jpeg',
-        'Cache-Control': 'public, max-age=31536000, immutable', // Cache for 1 year
-        'Content-Length': imageBuffer.byteLength.toString(),
+        'Content-Type': contentType,
+        'Cache-Control': 'public, max-age=86400', // Cache for 24 hours
+        'X-Photo-Id': photoId,
+        'X-Photo-Size': size,
+        'X-Image-Source': photo.baseUrl.includes('picsum.photos') ? 'picsum' : 'other',
       },
     });
 
   } catch (error) {
-    console.error('Image proxy error:', error);
+    console.error('❌ Image Proxy error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch image' },
+      { error: 'Image proxy failed', details: String(error) },
       { status: 500 }
     );
   }

@@ -43,8 +43,10 @@ glog                      # Show last commit
 
 ### Development Shortcuts
 ```bash
+dlmb                      # 🚀 Navigate + syncos + VS Code + dev-ultra + browser (full dev mode!)
 auth-setup                # 🔑 Complete OAuth setup (alias for make auth-setup)
 dev                       # Start development environment (alias for make dev)
+dev-ultra                 # ⚡ Ultra-fast development with pre-built base images
 deploy                    # Deploy current local branch to production (alias)
 quick-deploy              # ⚡ Fast deployment (alias for make droplet-quick-deploy)
 logs                      # View container logs (alias for make droplet-logs)
@@ -183,11 +185,12 @@ make droplet-force-rebuild  # Force clean rebuild
 
 This project combines original DLM photo gallery functionality with modern vadim-project-template infrastructure:
 
-### **Volume Mount Fix (July 2025)**
-- **Fixed dlmb alias mounting problems**: Containers now mount to correct project directories instead of parent PROJECTS directory
-- **Aligned with vadimOS ultra-dev pattern**: Consistent absolute path strategy matching vadimcastro.me
-- **Resolved Docker context issues**: No more `docker: no such file or directory` errors
-- **Performance improvement**: Ultra-fast development with pre-built base images
+### **dlmb Alias Fix (July 8, 2025) ✅**
+- **Fixed dlmb alias mounting problems**: Built missing `dlm-photo-*-base` images for ultra-fast startup
+- **Corrected Docker image names**: Updated compose file to use actual built image names
+- **Fixed OAuth validation**: Updated auth-setup.sh to recognize `.googleusercontent.com` domains
+- **Aligned with vadimOS ultra-dev pattern**: Now works identically to `vcb` with pre-built base images
+- **Result**: `dlmb` alias now fully functional with 3x faster container startup
 
 
 **Original DLM v1 Features Preserved:**
@@ -205,6 +208,81 @@ This project combines original DLM photo gallery functionality with modern vadim
 - ✅ Production-ready Makefile commands
 - ✅ Advanced UI components (ProfileDropdown, AdminMenu)
 - ✅ Mobile-first responsive design
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

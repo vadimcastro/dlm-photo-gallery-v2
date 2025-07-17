@@ -129,12 +129,13 @@ export default function HomePage() {
       const data = await response.json();
       setPhotos(data);
       
-      // Preload images after setting photos
+      // Preload images in background without blocking UI
       if (data.length > 0) {
         const imageSources = data.map((photo: any) => 
           `/api/v1/photos/image/${photo.id}?size=medium`
         );
-        imageCache.preloadImages(imageSources);
+        // Don't await preloading - let it happen in background
+        setTimeout(() => imageCache.preloadImages(imageSources), 100);
       }
       
     } catch (err) {
@@ -179,9 +180,107 @@ export default function HomePage() {
   };
 
   // Filter photos by category
-  const filteredPhotos = selectedCategory === 'all' 
+  const rawFilteredPhotos = selectedCategory === 'all' 
     ? photos 
     : photos.filter(photo => photo.category === selectedCategory);
+
+  // Debug and fix masonry ordering
+  const filteredPhotos = React.useMemo(() => {
+    if (rawFilteredPhotos.length === 0) return rawFilteredPhotos;
+    
+    const photos = [...rawFilteredPhotos];
+    
+    // Classify photos based on actual photo collection ratios
+    const classified = photos.map((photo, index) => {
+      const aspectRatio = photo.width / photo.height;
+      return {
+        ...photo,
+        aspectRatio,
+        // Classification based on actual photo dimensions:
+        // wide: landscape photos (1.3+), tall: portrait photos (<0.8), standard: square-ish
+        type: aspectRatio >= 1.2 ? 'wide' : aspectRatio <= 0.8 ? 'tall' : 'standard',
+        originalIndex: index
+      };
+    });
+    
+    // Debug: Log photo distribution
+    const wide = classified.filter(p => p.type === 'wide');
+    const standard = classified.filter(p => p.type === 'standard');
+    const tall = classified.filter(p => p.type === 'tall');
+    
+    console.log('Photo distribution:', {
+      total: photos.length,
+      wide: wide.length,
+      standard: standard.length,
+      tall: tall.length
+    });
+    
+    // Calculate total height and target per column with 5% buffer
+    const totalHeight = classified.reduce((sum, photo) => sum + (300 / photo.aspectRatio + 24), 0);
+    const targetHeight = totalHeight / 3;
+    
+    const targetWithBuffer = targetHeight * 1.05 // 5% buffer
+
+    console.log('Height targets:', { 
+      totalHeight: Math.round(totalHeight), 
+      targetHeight: Math.round(targetHeight),
+      targetWithBuffer: Math.round(targetWithBuffer)
+    });
+    
+    // Dynamic column balancing with target height + buffer
+    const result: any[] = [];
+    let wideIndex = 0;
+    const nonWide = [...standard, ...tall];
+    let nonWideIndex = 0;
+    
+    const columns: any[][] = [[], [], []];
+    const columnHeights = [0, 0, 0];
+    
+    // Alternate wide and non-wide photos, respecting target with buffer
+    for (let i = 0; i < photos.length; i++) {
+      let photo;
+      
+      if (i % 4 === 0 && wideIndex < wide.length) {
+        photo = wide[wideIndex++];
+      } else if (nonWideIndex < nonWide.length) {
+        photo = nonWide[nonWideIndex++];
+      } else if (wideIndex < wide.length) {
+        photo = wide[wideIndex++];
+      }
+      
+      if (photo) {
+        const photoHeight = 300 / photo.aspectRatio + 24;
+        
+        // Find first column that can fit photo within buffer target
+        let bestCol = -1;
+      
+        for (let col = 0; col < 3; col++) {
+          if (columnHeights[col] + photoHeight <= targetWithBuffer) {
+            bestCol = col;
+            break;
+          }
+        }
+        
+      
+        // If no column within buffer, use shortest column
+        if (bestCol === -1) {
+          bestCol = columnHeights.indexOf(Math.min(...columnHeights));
+        }
+        columns[bestCol].push(photo);
+        columnHeights[bestCol] += photoHeight;
+      }
+    }
+    
+    // Flatten columns in order: col1, col2, col3
+    result.push(...columns[0], ...columns[1], ...columns[2]);
+    
+    console.log('Final heights vs target:', columnHeights.map(h => Math.round(h)), 'target:', Math.round(targetHeight));
+    console.log('Photos per column:', columns.map(c => c.length));
+    
+    console.log('Result order first 9:', result.slice(0, 9).map(p => `${p.type}(${p.aspectRatio.toFixed(2)})`));
+    
+    return result;
+  }, [rawFilteredPhotos]);
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--champagne-light)' }}>
@@ -271,7 +370,7 @@ export default function HomePage() {
         {!loading && !error && (
           <>
             {/* Photo Grid - CSS Columns Masonry Layout */}
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-6">
+            <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 mb-8">
               {filteredPhotos.map((photo, index) => (
                 <div 
                   key={photo.id} 
@@ -384,11 +483,6 @@ export default function HomePage() {
               <img src="/favicon.ico" alt="Admin Login" className="w-4 h-4" />
             </button>
           </div>
-          
-          <div 
-            className="absolute inset-0 z-[-1]"
-            onClick={() => setSelectedPhoto(null)}
-          ></div>
         </div>
       </footer>
 

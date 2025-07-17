@@ -7,6 +7,9 @@ const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfa
 export const metadata = {
   title: 'DLM Photo Gallery',
   description: 'Dan\'s personal photo gallery powered by modern web technology',
+  icons: {
+    icon: '/favicon.ico',
+  },
 }
 
 export default function RootLayout({

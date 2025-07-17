@@ -69,3 +69,14 @@ coverage/
 # Alembic
 backend/alembic/versions/*.py
 !backend/alembic/versions/.gitkeep
+
+# Photos (should not be committed - too large and should be uploaded separately)
+backend/photos/
+frontend/public/photos/
+*.CR2
+*.JPG
+*.jpg
+*.png
+*.jpeg
+*.gif
+*.webp

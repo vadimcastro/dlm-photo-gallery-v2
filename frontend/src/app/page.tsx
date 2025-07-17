@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Mail } from 'lucide-react';
+import LoginModal from '@/components/LoginModal';
 
 // Enhanced Image Cache utility with better error handling and retry logic
 const imageCache = {
@@ -101,14 +102,17 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedPhoto, setSelectedPhoto] = useState<any | null>(null);
   const [loadedImages, setLoadedImages] = useState(new Set());
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   const categories = [
     { id: 'all', name: 'All' },
-    { id: 'portraits', name: 'Portraits' },
-    { id: 'landscape', name: 'Landscape' },
     { id: 'architecture', name: 'Architecture' },
+    { id: 'landscape', name: 'Landscape' },
+    { id: 'wildlife', name: 'Wildlife' },
     { id: 'abstract', name: 'Abstract' },
-    { id: 'wildlife', name: 'Wildlife' }
+    { id: 'portraits', name: 'Portraits' }
   ];
 
   // Load photos from API
@@ -144,6 +148,35 @@ export default function HomePage() {
   useEffect(() => {
     loadPhotos();
   }, [loadPhotos]);
+
+  // Login handler
+  const handleLogin = async (email: string, password: string) => {
+    setLoginLoading(true);
+    setLoginError(null);
+    
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Invalid credentials');
+      }
+
+      const data = await response.json();
+      
+      // Redirect to dashboard on successful login
+      window.location.href = '/dashboard';
+    } catch (err) {
+      setLoginError(err instanceof Error ? err.message : 'Login failed');
+    } finally {
+      setLoginLoading(false);
+    }
+  };
 
   // Filter photos by category
   const filteredPhotos = selectedCategory === 'all' 
@@ -182,14 +215,16 @@ export default function HomePage() {
                   }}
                   onMouseEnter={(e) => {
                     if (selectedCategory !== category.id) {
-                      e.target.style.color = 'var(--brown-hover)';
-                      e.target.style.borderColor = 'var(--brown-hover)';
+                      const target = e.target as HTMLElement;
+                      target.style.color = 'var(--brown-hover)';
+                      target.style.borderColor = 'var(--brown-hover)';
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (selectedCategory !== category.id) {
-                      e.target.style.color = 'var(--charcoal)';
-                      e.target.style.borderColor = 'transparent';
+                      const target = e.target as HTMLElement;
+                      target.style.color = 'var(--charcoal)';
+                      target.style.borderColor = 'transparent';
                     }
                   }}
                   onClick={() => setSelectedCategory(category.id)}
@@ -301,32 +336,68 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="py-3 font-libertinus-mono text-sm" style={{ backgroundColor: 'var(--champagne)', color: 'var(--charcoal)' }}>
-        <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
+        <div className="max-w-6xl mx-auto w-full px-6 flex justify-between items-center">
           <div>
             <p className="text-xs">&copy; 2024 DLM Photo Gallery. All rights reserved.</p>
           </div>
           
-          <button
-            onClick={() => window.location.href = 'mailto:danieminnock25@gmail.com'}
-            className="cursor-pointer py-1 px-1 border-b-2 transition-all duration-200 flex items-center gap-2"
-            style={{ 
-              color: 'var(--charcoal)',
-              borderColor: 'transparent'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--brown-hover)';
-              e.currentTarget.style.borderColor = 'var(--brown-hover)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'var(--charcoal)';
-              e.currentTarget.style.borderColor = 'transparent';
-            }}
-          >
-            <Mail size={16} />
-            Contact Dan
-          </button>
+          <div className="flex items-center gap-8">
+            <button
+              onClick={() => window.location.href = 'mailto:danieminnock25@gmail.com'}
+              className="cursor-pointer py-1 px-1 border-b-2 transition-all duration-200 flex items-center gap-2"
+              style={{ 
+                color: 'var(--charcoal)',
+                borderColor: 'transparent'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.currentTarget as HTMLElement;
+                target.style.color = 'var(--brown-hover)';
+                target.style.borderColor = 'var(--brown-hover)';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.currentTarget as HTMLElement;
+                target.style.color = 'var(--charcoal)';
+                target.style.borderColor = 'transparent';
+              }}
+            >
+              <Mail size={16} />
+              Contact Dan
+            </button>
+            
+            <button
+              onClick={() => setShowLoginModal(true)}
+              className="cursor-pointer p-2 border rounded transition-all duration-200 mr-1"
+              style={{ 
+                borderColor: '#000000',
+                borderWidth: '1px',
+                backgroundColor: 'transparent'
+              }}
+              onMouseEnter={(e) => {
+                const target = e.currentTarget as HTMLElement;
+                target.style.borderColor = '#ffffff';
+              }}
+              onMouseLeave={(e) => {
+                const target = e.currentTarget as HTMLElement;
+                target.style.borderColor = '#000000';
+              }}
+            >
+              <img src="/favicon.ico" alt="Admin Login" className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </footer>
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => {
+          setShowLoginModal(false);
+          setLoginError(null);
+        }}
+        onLogin={handleLogin}
+        isLoading={loginLoading}
+        error={loginError}
+      />
     </div>
   );
 }

@@ -384,6 +384,11 @@ export default function HomePage() {
               <img src="/favicon.ico" alt="Admin Login" className="w-4 h-4" />
             </button>
           </div>
+          
+          <div 
+            className="absolute inset-0 z-[-1]"
+            onClick={() => setSelectedPhoto(null)}
+          ></div>
         </div>
       </footer>
 

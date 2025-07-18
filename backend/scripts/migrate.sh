@@ -52,8 +52,9 @@ sys.path.append('/app')
 
 # Import models to register them with Base
 from app.models.user import User
-from app.models.project import Project  
 from app.models.user_session import UserSession
+from app.models.photo import Photo
+from app.models.album import Album
 from app.db.base_class import Base
 from app.db.session import engine
 import logging

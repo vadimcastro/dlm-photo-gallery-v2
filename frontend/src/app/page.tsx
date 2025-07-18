@@ -184,7 +184,7 @@ export default function HomePage() {
   // Filter photos by category
   const filteredPhotos = selectedCategory === 'all' 
     ? photos 
-    : photos.filter(photo => photo.category === selectedCategory);
+    : photos.filter((photo: Photo) => photo.category === selectedCategory);
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--champagne-light)' }}>

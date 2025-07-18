@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from app.api.v1 import auth
-from app.api.v1.endpoints import metrics, photos
+from app.api.v1.endpoints import metrics, photos, local_photos
 
 api_router = APIRouter()
 
@@ -12,3 +12,6 @@ api_router.include_router(metrics.router, prefix="/metrics", tags=["metrics"])
 
 # Include photo gallery routes
 api_router.include_router(photos.router, prefix="/photos", tags=["photos"])
+
+# Include local photos routes
+api_router.include_router(local_photos.router, prefix="/photos", tags=["local_photos"])

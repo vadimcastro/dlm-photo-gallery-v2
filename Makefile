@@ -7,7 +7,7 @@ DROPLET_ALIAS = droplet
 PRODUCTION_IP = 206.81.2.168
 
 # Include universal vadimOS commands
-include ../vadimOS/vadimOS.mk
+include /Users/vadimcastro/Desktop/PROJECTS/vadimOS/vadimOS.mk
 
 # Project-specific PHONY targets
 .PHONY: dev-npm dev-docker kd test-api auth-setup quick-deploy deploy-clean
@@ -66,4 +66,5 @@ auth-setup:
 setup-local-auth:
 	@echo "Setting up local development authentication..."
 	./scripts/auth-setup.sh
+
 

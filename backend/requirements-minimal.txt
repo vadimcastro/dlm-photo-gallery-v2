@@ -17,3 +17,4 @@ slowapi==0.1.9
 email-validator==2.1.0
 httpx==0.25.2
 Pillow==11.3.0
+numpy==1.24.4

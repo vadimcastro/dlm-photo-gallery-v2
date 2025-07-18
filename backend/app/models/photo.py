@@ -21,6 +21,7 @@ class Photo(Base):
     height = Column(Integer, nullable=True)
     file_size = Column(Integer, nullable=True)
     mime_type = Column(String(100), nullable=True)
+    color_profile = Column(String(20), nullable=True)  # warm, cool, neutral, vibrant, muted
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 

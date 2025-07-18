@@ -30,10 +30,12 @@ export class LocalPhotosService implements IPhotoService {
         width: photo.width || 800,
         height: photo.height || 600,
         aspectRatio: photo.width && photo.height ? photo.width / photo.height : 1.33,
+        colorProfile: photo.color_profile || 'neutral',
         baseUrl: `/photos/${photo.category}/${photo.filename}`, // Direct Next.js static serving
         url: `/photos/${photo.category}/${photo.filename}`, // Direct Next.js static serving
         thumbnailUrl: `/photos/${photo.category}/${photo.filename}`, // Same file for now
-        largeUrl: `/photos/${photo.category}/${photo.filename}` // Same file for now
+        largeUrl: `/photos/${photo.category}/${photo.filename}`, // Same file for now
+        creationTime: photo.created_at
       }));
 
       return {
@@ -72,10 +74,12 @@ export class LocalPhotosService implements IPhotoService {
         width: photo.width || 800,
         height: photo.height || 600,
         aspectRatio: photo.width && photo.height ? photo.width / photo.height : 1.33,
+        colorProfile: photo.color_profile || 'neutral',
         baseUrl: `/photos/${photo.category}/${photo.filename}`, // Direct Next.js static serving
         url: `/photos/${photo.category}/${photo.filename}`, // Direct Next.js static serving
         thumbnailUrl: `/photos/${photo.category}/${photo.filename}`, // Same file for now
-        largeUrl: `/photos/${photo.category}/${photo.filename}` // Same file for now
+        largeUrl: `/photos/${photo.category}/${photo.filename}`, // Same file for now
+        creationTime: photo.created_at
       }));
 
       return {
@@ -131,10 +135,12 @@ export class LocalPhotosService implements IPhotoService {
         width: photo.width || 800,
         height: photo.height || 600,
         aspectRatio: photo.width && photo.height ? photo.width / photo.height : 1.33,
+        colorProfile: photo.color_profile || 'neutral',
         baseUrl: `/photos/${photo.category}/${photo.filename}`, // Direct Next.js static serving
         url: `/photos/${photo.category}/${photo.filename}`, // Direct Next.js static serving
         thumbnailUrl: `/photos/${photo.category}/${photo.filename}`, // Same file for now
-        largeUrl: `/photos/${photo.category}/${photo.filename}` // Same file for now
+        largeUrl: `/photos/${photo.category}/${photo.filename}`, // Same file for now
+        creationTime: photo.created_at
       };
 
       return {
@@ -173,10 +179,12 @@ export class LocalPhotosService implements IPhotoService {
         width: photo.width || 800,
         height: photo.height || 600,
         aspectRatio: photo.width && photo.height ? photo.width / photo.height : 1.33,
+        colorProfile: photo.color_profile || 'neutral',
         baseUrl: `/photos/${photo.category}/${photo.filename}`, // Direct Next.js static serving
         url: `/photos/${photo.category}/${photo.filename}`, // Direct Next.js static serving
         thumbnailUrl: `/photos/${photo.category}/${photo.filename}`, // Same file for now
-        largeUrl: `/photos/${photo.category}/${photo.filename}` // Same file for now
+        largeUrl: `/photos/${photo.category}/${photo.filename}`, // Same file for now
+        creationTime: photo.created_at
       }));
 
       return {

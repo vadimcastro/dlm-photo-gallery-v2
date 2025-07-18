@@ -5,6 +5,7 @@ import { Mail } from 'lucide-react';
 import LoginModal from '@/components/LoginModal';
 import { createPhotoServiceFactory } from '@/lib/services/PhotoServiceFactory';
 import { Photo } from '@/lib/services/IPhotoService';
+import { PhotoDistributionEngine } from '@/lib/utils/photoDistribution';
 
 // Enhanced Image Cache utility with better error handling and retry logic
 const imageCache = {
@@ -108,6 +109,10 @@ export default function HomePage() {
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
   
+  // Hover state management
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const [hoveredElement, setHoveredElement] = useState<string | null>(null);
+  
   // Initialize PhotoServiceFactory
   const [photoService] = useState(() => createPhotoServiceFactory());
 
@@ -130,7 +135,11 @@ export default function HomePage() {
       const response = await photoService.getAllPhotos();
       console.log('✅ Photos loaded:', response.data.length, 'photos');
       
-      setPhotos(response.data);
+      // Apply advanced photo distribution algorithm
+      const distributedPhotos = PhotoDistributionEngine.distributePhotos(response.data);
+      console.log('🎨 Photos distributed for optimal visual flow');
+      
+      setPhotos(distributedPhotos);
       
       // Preload images after setting photos
       if (response.data.length > 0) {
@@ -193,10 +202,15 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <h1 
             className="text-4xl font-libertinus-mono tracking-wider cursor-pointer transition-colors"
-            style={{ color: 'var(--charcoal)' }}
-            onMouseEnter={(e) => e.target.style.color = 'var(--brown-hover)'}
-            onMouseLeave={(e) => e.target.style.color = 'var(--charcoal)'}
-            onClick={() => setSelectedCategory('all')}
+            style={{ 
+              color: hoveredElement === 'title' ? 'var(--brown-hover)' : 'var(--charcoal)'
+            }}
+            onMouseEnter={() => setHoveredElement('title')}
+            onMouseLeave={() => setHoveredElement(null)}
+            onClick={() => {
+              setSelectedCategory('all');
+              setHoveredCategory(null); // Clear any category hover state
+            }}
           >
             D.L.M.
           </h1>
@@ -207,30 +221,19 @@ export default function HomePage() {
               {categories.slice(1).map(category => (
                 <li 
                   key={category.id}
-                  className={`font-libertinus-mono text-sm cursor-pointer py-1 px-1 border-b-2 transition-all duration-200 ${
-                    selectedCategory === category.id 
-                      ? 'text-black' 
-                      : 'border-transparent hover:border-current'
-                  }`}
+                  className="font-libertinus-mono text-sm cursor-pointer py-1 px-1 border-b-2 transition-all duration-200"
                   style={{ 
-                    color: selectedCategory === category.id ? 'var(--charcoal)' : 'var(--charcoal)',
-                    borderColor: selectedCategory === category.id ? 'var(--brown-hover)' : 'transparent'
+                    color: selectedCategory === category.id ? 'var(--brown-hover)' : 
+                           hoveredCategory === category.id ? 'var(--brown-hover)' : 'var(--charcoal)',
+                    borderColor: selectedCategory === category.id ? 'var(--brown-hover)' : 
+                                hoveredCategory === category.id ? 'var(--brown-hover)' : 'transparent'
                   }}
-                  onMouseEnter={(e) => {
-                    if (selectedCategory !== category.id) {
-                      const target = e.target as HTMLElement;
-                      target.style.color = 'var(--brown-hover)';
-                      target.style.borderColor = 'var(--brown-hover)';
-                    }
+                  onMouseEnter={() => setHoveredCategory(category.id)}
+                  onMouseLeave={() => setHoveredCategory(null)}
+                  onClick={() => {
+                    setSelectedCategory(category.id);
+                    setHoveredCategory(null); // Clear hover state after selection
                   }}
-                  onMouseLeave={(e) => {
-                    if (selectedCategory !== category.id) {
-                      const target = e.target as HTMLElement;
-                      target.style.color = 'var(--charcoal)';
-                      target.style.borderColor = 'transparent';
-                    }
-                  }}
-                  onClick={() => setSelectedCategory(category.id)}
                 >
                   {category.name}
                 </li>
@@ -258,11 +261,11 @@ export default function HomePage() {
               <button 
                 className="mt-4 px-4 py-2 rounded transition-colors"
                 style={{ 
-                  backgroundColor: 'var(--sage-green)', 
+                  backgroundColor: hoveredElement === 'tryAgain' ? 'var(--sage-green-dark)' : 'var(--sage-green)', 
                   color: 'var(--white)'
                 }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--sage-green-dark)'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = 'var(--sage-green)'}
+                onMouseEnter={() => setHoveredElement('tryAgain')}
+                onMouseLeave={() => setHoveredElement(null)}
                 onClick={loadPhotos}
               >
                 Try Again
@@ -284,7 +287,6 @@ export default function HomePage() {
                     className="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
                     style={{ 
                       backgroundColor: 'var(--white)',
-                      maxHeight: '80vh', // Limit height to 80% of viewport
                       maxWidth: '100%'
                     }}
                     onClick={() => setSelectedPhoto(photo)}
@@ -292,14 +294,9 @@ export default function HomePage() {
                     <img
                       src={photo.url || `/api/v1/photos/image/${photo.id}?size=medium`}
                       alt={photo.description || `Photo ${index + 1}`}
-                      className="w-full h-auto object-cover"
-                      style={{
-                        aspectRatio: photo.aspectRatio ? `${photo.aspectRatio}` : `${photo.width || 800} / ${photo.height || 600}`,
-                        maxHeight: '80vh',
-                        objectFit: 'cover'
-                      }}
+                      className="w-full h-auto block"
                       loading="lazy"
-                      onLoad={() => setLoadedImages(prev => new Set([...prev, photo.id]))}
+                      onLoad={() => setLoadedImages(prev => new Set(Array.from(prev).concat(photo.id)))}
                     />
                   </div>
                 </div>
@@ -315,9 +312,11 @@ export default function HomePage() {
           <div className="relative max-w-full max-h-[85vh] mx-auto">
             <button 
               className="absolute -top-12 right-0 text-3xl focus:outline-none transition-colors"
-              style={{ color: 'var(--champagne)' }}
-              onMouseEnter={(e) => e.target.style.color = 'var(--sage-green-light)'}
-              onMouseLeave={(e) => e.target.style.color = 'var(--champagne)'}
+              style={{ 
+                color: hoveredElement === 'modalClose' ? 'var(--sage-green-light)' : 'var(--champagne)' 
+              }}
+              onMouseEnter={() => setHoveredElement('modalClose')}
+              onMouseLeave={() => setHoveredElement(null)}
               onClick={() => setSelectedPhoto(null)}
             >
               &times;
@@ -349,19 +348,11 @@ export default function HomePage() {
               onClick={() => window.location.href = 'mailto:danieminnock25@gmail.com'}
               className="cursor-pointer py-1 px-1 border-b-2 transition-all duration-200 flex items-center gap-2"
               style={{ 
-                color: 'var(--charcoal)',
-                borderColor: 'transparent'
+                color: hoveredElement === 'contact' ? 'var(--brown-hover)' : 'var(--charcoal)',
+                borderColor: hoveredElement === 'contact' ? 'var(--brown-hover)' : 'transparent'
               }}
-              onMouseEnter={(e) => {
-                const target = e.currentTarget as HTMLElement;
-                target.style.color = 'var(--brown-hover)';
-                target.style.borderColor = 'var(--brown-hover)';
-              }}
-              onMouseLeave={(e) => {
-                const target = e.currentTarget as HTMLElement;
-                target.style.color = 'var(--charcoal)';
-                target.style.borderColor = 'transparent';
-              }}
+              onMouseEnter={() => setHoveredElement('contact')}
+              onMouseLeave={() => setHoveredElement(null)}
             >
               <Mail size={16} />
               Contact Dan
@@ -371,27 +362,16 @@ export default function HomePage() {
               onClick={() => setShowLoginModal(true)}
               className="cursor-pointer p-2 border rounded transition-all duration-200 mr-1"
               style={{ 
-                borderColor: '#000000',
+                borderColor: hoveredElement === 'loginButton' ? '#ffffff' : '#000000',
                 borderWidth: '1px',
                 backgroundColor: 'transparent'
               }}
-              onMouseEnter={(e) => {
-                const target = e.currentTarget as HTMLElement;
-                target.style.borderColor = '#ffffff';
-              }}
-              onMouseLeave={(e) => {
-                const target = e.currentTarget as HTMLElement;
-                target.style.borderColor = '#000000';
-              }}
+              onMouseEnter={() => setHoveredElement('loginButton')}
+              onMouseLeave={() => setHoveredElement(null)}
             >
               <img src="/favicon.ico" alt="Admin Login" className="w-4 h-4" />
             </button>
           </div>
-          
-          <div 
-            className="absolute inset-0 z-[-1]"
-            onClick={() => setSelectedPhoto(null)}
-          ></div>
         </div>
       </footer>
 

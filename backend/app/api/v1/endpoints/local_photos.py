@@ -64,7 +64,8 @@ async def search_local_photos(
                 "baseUrl": f"/photos/{photo.category}/{photo.filename}",
                 "width": photo.width or 800,
                 "height": photo.height or 600,
-                "creationTime": photo.created_at.isoformat() if photo.created_at else None
+                "color_profile": photo.color_profile or "neutral",
+                "created_at": photo.created_at.isoformat() if photo.created_at else None
             })
         
         return {
@@ -106,7 +107,8 @@ async def get_local_photos(
                 "baseUrl": f"/photos/{photo.category}/{photo.filename}",
                 "width": photo.width or 800,
                 "height": photo.height or 600,
-                "creationTime": photo.created_at.isoformat() if photo.created_at else None
+                "color_profile": photo.color_profile or "neutral",
+                "created_at": photo.created_at.isoformat() if photo.created_at else None
             })
         
         # Get unique categories
@@ -149,7 +151,8 @@ async def get_local_photo_by_id(
                 "baseUrl": f"/photos/{photo.category}/{photo.filename}",
                 "width": photo.width or 800,
                 "height": photo.height or 600,
-                "creationTime": photo.created_at.isoformat() if photo.created_at else None
+                "color_profile": photo.color_profile or "neutral",
+                "created_at": photo.created_at.isoformat() if photo.created_at else None
             }
         }
         

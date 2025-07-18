@@ -1,4 +1,4 @@
-import { IPhotoService, Photo, PhotoServiceResponse, PhotoServiceConfig } from './IPhotoService';
+import { IPhotoService, Photo, PhotoServiceResponse, PhotoServiceConfig, ColorProfile } from './IPhotoService';
 
 export class MockPhotosService extends IPhotoService {
   name = 'MockPhotosService';
@@ -162,14 +162,21 @@ export class MockPhotosService extends IPhotoService {
         const creationTime = new Date(Date.now() - daysBack * 24 * 60 * 60 * 1000).toISOString();
         const uniqueId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}-${category}-${i}`;
         
+        const baseUrl = `https://loremflickr.com/${sourceData.w}/${sourceData.h}/${category}?t=${Date.now()}${i}`;
+        
         photos.push({
           id: `mock-${category}-${i + 1}`,
           category,
           filename: `${category}_${sourceData.id}.jpg`,
           description: `${category} photo`,
-          baseUrl: `https://loremflickr.com/${sourceData.w}/${sourceData.h}/${category}?t=${Date.now()}${i}`,
+          baseUrl,
+          url: baseUrl,
+          thumbnailUrl: baseUrl,
+          largeUrl: baseUrl,
           width: sourceData.w,
           height: sourceData.h,
+          aspectRatio: sourceData.w / sourceData.h,
+          colorProfile: 'neutral',
           creationTime,
         });
       }
@@ -194,7 +201,7 @@ export class MockPhotosService extends IPhotoService {
       
       // If same aspect category, sort by creation time
       if (catA === catB) {
-        return new Date(b.creationTime).getTime() - new Date(a.creationTime).getTime();
+        return new Date(b.creationTime || 0).getTime() - new Date(a.creationTime || 0).getTime();
       }
       
       // Interleave different aspect ratios for better masonry flow

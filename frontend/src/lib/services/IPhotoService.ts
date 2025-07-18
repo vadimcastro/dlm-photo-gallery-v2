@@ -1,3 +1,6 @@
+// Color profile for advanced photo distribution
+export type ColorProfile = 'warm' | 'cool' | 'neutral' | 'vibrant' | 'muted';
+
 // Standardized Photo Service Interface
 export interface Photo {
   id: string;
@@ -5,9 +8,14 @@ export interface Photo {
   filename: string;
   description: string;
   baseUrl: string;
+  url: string;
+  thumbnailUrl?: string;
+  largeUrl?: string;
   width: number;
   height: number;
-  creationTime: string;
+  aspectRatio?: number;
+  colorProfile?: ColorProfile;
+  creationTime?: string;
 }
 
 export interface PhotoServiceConfig {
@@ -19,9 +27,11 @@ export interface PhotoServiceConfig {
 
 export interface PhotoServiceResponse<T> {
   data: T;
-  source: string;
-  timestamp: string;
-  config: PhotoServiceConfig;
+  config: {
+    service: string;
+    totalCount?: number;
+    metadata?: Record<string, any>;
+  };
 }
 
 export interface PhotoServiceError {
@@ -55,13 +65,14 @@ export abstract class IPhotoService {
   protected createResponse<T>(data: T, metadata?: Record<string, any>): PhotoServiceResponse<T> {
     return {
       data,
-      source: this.name,
-      timestamp: new Date().toISOString(),
       config: {
-        name: this.name,
-        version: this.version,
-        isAvailable: true,
-        metadata
+        service: this.name,
+        totalCount: Array.isArray(data) ? data.length : (data ? 1 : 0),
+        metadata: {
+          timestamp: new Date().toISOString(),
+          version: this.version,
+          ...metadata
+        }
       }
     };
   }

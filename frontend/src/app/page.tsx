@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Mail } from 'lucide-react';
 import LoginModal from '@/components/LoginModal';
+import { createPhotoServiceFactory } from '@/lib/services/PhotoServiceFactory';
+import { Photo } from '@/lib/services/IPhotoService';
 
 // Enhanced Image Cache utility with better error handling and retry logic
 const imageCache = {
@@ -96,15 +98,18 @@ const imageCache = {
 };
 
 export default function HomePage() {
-  const [photos, setPhotos] = useState<any[]>([]);
+  const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedPhoto, setSelectedPhoto] = useState<any | null>(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   const [loadedImages, setLoadedImages] = useState(new Set());
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
+  
+  // Initialize PhotoServiceFactory
+  const [photoService] = useState(() => createPhotoServiceFactory());
 
   const categories = [
     { id: 'all', name: 'All' },
@@ -115,35 +120,33 @@ export default function HomePage() {
     { id: 'portraits', name: 'Portraits' }
   ];
 
-  // Load photos from API
+  // Load photos from PhotoServiceFactory
   const loadPhotos = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       
-      const response = await fetch('/api/v1/photos/albums');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      console.log('🔄 Loading photos with PhotoServiceFactory...');
+      const response = await photoService.getAllPhotos();
+      console.log('✅ Photos loaded:', response.data.length, 'photos');
       
-      const data = await response.json();
-      setPhotos(data);
+      setPhotos(response.data);
       
       // Preload images after setting photos
-      if (data.length > 0) {
-        const imageSources = data.map((photo: any) => 
-          `/api/v1/photos/image/${photo.id}?size=medium`
+      if (response.data.length > 0) {
+        const imageSources = response.data.map((photo: Photo) => 
+          photo.url || `/api/v1/photos/image/${photo.id}?size=medium`
         );
         imageCache.preloadImages(imageSources);
       }
       
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load photos');
-      console.error('Error loading photos:', err);
+      console.error('❌ Error loading photos:', err);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [photoService]);
 
   useEffect(() => {
     loadPhotos();
@@ -287,11 +290,11 @@ export default function HomePage() {
                     onClick={() => setSelectedPhoto(photo)}
                   >
                     <img
-                      src={`/api/v1/photos/image/${photo.id}?size=medium`}
+                      src={photo.url || `/api/v1/photos/image/${photo.id}?size=medium`}
                       alt={photo.description || `Photo ${index + 1}`}
                       className="w-full h-auto object-cover"
                       style={{
-                        aspectRatio: `${photo.width} / ${photo.height}`,
+                        aspectRatio: photo.aspectRatio ? `${photo.aspectRatio}` : `${photo.width || 800} / ${photo.height || 600}`,
                         maxHeight: '80vh',
                         objectFit: 'cover'
                       }}
@@ -321,7 +324,7 @@ export default function HomePage() {
             </button>
             
             <img 
-              src={`/api/v1/photos/image/${selectedPhoto.id}?size=large`}
+              src={selectedPhoto.largeUrl || `/api/v1/photos/image/${selectedPhoto.id}?size=large`}
               alt={selectedPhoto.description || 'Photo'}
               className="max-w-full max-h-[85vh] object-contain"
             />

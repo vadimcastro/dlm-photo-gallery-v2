@@ -5,8 +5,11 @@ export class LocalPhotosService implements IPhotoService {
   private baseUrl: string;
 
   constructor() {
-    // Use relative URL for Next.js API routes
-    this.baseUrl = '/api/v1/photos/local';
+    // Use absolute URL for Next.js API routes
+    const baseUrl = typeof window !== 'undefined' 
+      ? '' // Client-side: use relative URLs
+      : process.env.NEXTAUTH_URL || 'http://localhost:3000'; // Server-side: use absolute URLs
+    this.baseUrl = `${baseUrl}/api/v1/photos/local`;
   }
 
   async getAllPhotos(): Promise<PhotoServiceResponse<Photo[]>> {
@@ -20,9 +23,9 @@ export class LocalPhotosService implements IPhotoService {
       
       // Transform backend response to match Photo interface
       const photos: Photo[] = data.photos.map((photo: any) => ({
-        id: photo.id.toString(),
+        id: photo.id, // Backend already returns string
         filename: photo.filename,
-        description: photo.title || photo.filename,
+        description: photo.description || photo.filename,
         category: photo.category || 'uncategorized',
         width: photo.width || 800,
         height: photo.height || 600,
@@ -61,9 +64,9 @@ export class LocalPhotosService implements IPhotoService {
       const data = await response.json();
       
       const photos: Photo[] = data.photos.map((photo: any) => ({
-        id: photo.id,
+        id: photo.id, // Backend already returns string
         filename: photo.filename,
-        description: photo.description,
+        description: photo.description || photo.filename,
         category: photo.category || 'uncategorized',
         width: photo.width || 800,
         height: photo.height || 600,
@@ -119,9 +122,9 @@ export class LocalPhotosService implements IPhotoService {
       const photo = data.photo;
       
       const transformedPhoto: Photo = {
-        id: photo.id,
+        id: photo.id, // Backend already returns string
         filename: photo.filename,
-        description: photo.description,
+        description: photo.description || photo.filename,
         category: photo.category || 'uncategorized',
         width: photo.width || 800,
         height: photo.height || 600,
@@ -160,9 +163,9 @@ export class LocalPhotosService implements IPhotoService {
       const data = await response.json();
       
       const photos: Photo[] = data.photos.map((photo: any) => ({
-        id: photo.id,
+        id: photo.id, // Backend already returns string
         filename: photo.filename,
-        description: photo.description,
+        description: photo.description || photo.filename,
         category: photo.category || 'uncategorized',
         width: photo.width || 800,
         height: photo.height || 600,

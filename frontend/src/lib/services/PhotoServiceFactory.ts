@@ -1,10 +1,11 @@
 import { IPhotoService, PhotoServiceResponse, Photo } from './IPhotoService';
 import { MockPhotosService } from './MockPhotosService';
 import { GooglePhotosService } from './GooglePhotosService';
+import { LocalPhotosService } from './LocalPhotosService';
 
 export interface PhotoServiceFactoryConfig {
   // Service selection
-  primaryService: 'google' | 'mock';
+  primaryService: 'local' | 'google' | 'mock';
   enableFallback: boolean;
   
   // Google Photos configuration
@@ -117,7 +118,7 @@ export class PhotoServiceFactory {
     return status;
   }
 
-  async switchPrimaryService(serviceName: 'google' | 'mock') {
+  async switchPrimaryService(serviceName: 'local' | 'google' | 'mock') {
     this.log('info', `Switching primary service to: ${serviceName}`);
     this.config.primaryService = serviceName;
     this.initializeServices();
@@ -127,15 +128,17 @@ export class PhotoServiceFactory {
   private initializeServices() {
     this.log('info', `Initializing services - Primary: ${this.config.primaryService}`);
 
-    // Initialize primary service
+    // Initialize primary service - default to local
     if (this.config.primaryService === 'google' && this.config.googlePhotos) {
       this.primaryService = new GooglePhotosService(this.config.googlePhotos);
-      this.fallbackService = this.config.enableFallback ? new MockPhotosService() : null;
-    } else {
+      this.fallbackService = this.config.enableFallback ? new LocalPhotosService() : null;
+    } else if (this.config.primaryService === 'mock') {
       this.primaryService = new MockPhotosService();
-      this.fallbackService = this.config.enableFallback && this.config.googlePhotos 
-        ? new GooglePhotosService(this.config.googlePhotos) 
-        : null;
+      this.fallbackService = this.config.enableFallback ? new LocalPhotosService() : null;
+    } else {
+      // Default to local service (production-ready with Dan's photos)
+      this.primaryService = new LocalPhotosService();
+      this.fallbackService = this.config.enableFallback ? new MockPhotosService() : null;
     }
 
     this.log('info', 'Services initialized', {
@@ -205,7 +208,7 @@ export class PhotoServiceFactory {
 // Factory function to create configured instance
 export function createPhotoServiceFactory(): PhotoServiceFactory {
   const config: PhotoServiceFactoryConfig = {
-    primaryService: (process.env.USE_MOCK_DATA !== 'false') ? 'mock' : 'google',
+    primaryService: 'local', // Default to LocalPhotosService (production-ready with Dan's photos)
     enableFallback: true,
     logLevel: (process.env.NODE_ENV === 'development') ? 'debug' : 'info',
     

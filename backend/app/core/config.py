@@ -7,13 +7,13 @@ import os
 from .parameters import parameter_store
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "{{PROJECT_DISPLAY_NAME}} API"
-    DEBUG: bool = True
+    PROJECT_NAME: str = os.getenv("PROJECT_NAME", "DLM Photo Gallery API")
+    DEBUG: bool = os.getenv("DEBUG", "true").lower() == "true"
     
     # Database settings
     POSTGRES_USER: str = os.getenv("POSTGRES_USER", "postgres")
     POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "password")
-    POSTGRES_DB: str = os.getenv("POSTGRES_DB", "{{PROJECT_NAME}}")
+    POSTGRES_DB: str = os.getenv("POSTGRES_DB", "dlm-photo-gallery-v2")
     POSTGRES_HOST: str = os.getenv("POSTGRES_HOST", "db")
     POSTGRES_PORT: int = int(os.getenv("POSTGRES_PORT", "5432"))
     
@@ -32,10 +32,10 @@ class Settings(BaseSettings):
         return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
     
     # Admin user settings
-    ADMIN_EMAIL: str = os.getenv("ADMIN_EMAIL", "{{ADMIN_EMAIL}}")
-    ADMIN_PASSWORD: str = os.getenv("ADMIN_PASSWORD", "{{DEV_PASSWORD}}")
-    ADMIN_USERNAME: str = os.getenv("ADMIN_USERNAME", "{{ADMIN_USERNAME}}")
-    ADMIN_NAME: str = os.getenv("ADMIN_NAME", "{{ADMIN_NAME}}")
+    ADMIN_EMAIL: str = os.getenv("ADMIN_EMAIL", "danieminnock25@gmail.com")
+    ADMIN_PASSWORD: str = os.getenv("ADMIN_PASSWORD", "gallery123")
+    ADMIN_USERNAME: str = os.getenv("ADMIN_USERNAME", "dan")
+    ADMIN_NAME: str = os.getenv("ADMIN_NAME", "Dan")
     
     # Redis settings
     @property
@@ -75,6 +75,8 @@ class Settings(BaseSettings):
         "http://127.0.0.1:8000",
         "http://0.0.0.0:8000",
         "http://api:8000",
+        "http://206.81.2.168:3000",  # Production frontend
+        "http://206.81.2.168:8000",  # Production API
     ]
     CORS_CREDENTIALS: bool = True
     CORS_METHODS: List[str] = ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"]
